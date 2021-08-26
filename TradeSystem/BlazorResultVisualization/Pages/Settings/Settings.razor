@@ -1,0 +1,119 @@
+﻿@page "/settings"
+
+@implements IDisposable;
+
+@if (ShowSpinner)
+{
+    <div class="sb-content-overlay">
+        <div class="sb-loading">
+            <svg class="circular" height="40" width="40">
+                <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="6" stroke-miterlimit="10" />
+            </svg>
+        </div>
+    </div>
+    <style>
+        #main-page {
+            pointer-events: none;
+            cursor: auto;
+        }
+    </style>
+}
+
+<style>
+    #main-page {
+        overflow-x: hidden;
+        background: linear-gradient(-141deg, #EEF5F7 14%, #EEF2FB 100%);
+    }
+
+    .content.container-fluid {
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    @@media (min-width: 1100px) {
+        .rightpane {
+            margin-right: 270px;
+        }
+    }
+
+    @@media (max-width: 1100px) {
+        .rightpane {
+            margin-right: 0px;
+        }
+    }
+
+    @@media (min-width: 768px) {
+        .content .content-wrapper {
+            padding: 0;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .content .content-wrapper {
+            padding: 0 8px 8px 8px;
+            margin-top: 7rem;
+        }
+    }
+
+    .content.container-fluid {
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+</style>
+
+<div class="expense-page">
+    <div class='exp-content-container'>
+        <div>
+            <p class="page-title">Test settings</p>
+        </div>
+        <div>
+            <div class="col-md-12 margin-top col-lg-12 settings-tb-container">
+
+                <div class="col-xs-12 col-sm-6 col-lg-3 col-md-6">
+                    <SfTextBox Placeholder="First Name" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-lg-3 col-md-6">
+                    <SfTextBox Placeholder="First Name" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-lg-3 col-md-6">
+                    <SfTextBox Placeholder="First Name" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-lg-3 col-md-6">
+                    <SfTextBox Placeholder="First Name" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@code {
+    [CascadingParameter]
+    public TradingDataService TradingDataService { get; set; }
+
+
+    public string SearchValue { get; set; }
+    private bool ShowSpinner = false;
+    private string visibility = "none";
+    private string color = "#FFFFFF";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        //if (firstRender)
+        //{
+        //    await base.OnAfterRenderAsync(firstRender);
+
+        //}
+    }
+
+    private void OnCreate()
+    {
+        this.visibility = ""; this.color = "";
+    }
+
+    public void Dispose()
+    {
+
+    }
+}
