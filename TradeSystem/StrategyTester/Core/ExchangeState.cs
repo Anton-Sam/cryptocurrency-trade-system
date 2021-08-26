@@ -1,11 +1,6 @@
-﻿using Binance.Net;
+﻿using StrategyTester.Models;
 using StrategyTester.Models.Test;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using StrategyTester.Extensions;
 
 namespace StrategyTester.Core
 {
