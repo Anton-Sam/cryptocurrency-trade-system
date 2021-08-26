@@ -63,24 +63,27 @@
     }
 </style>
 
-<div class="expense-page">
+<div class="expense-page content">
     <div class='exp-content-container'>
+        
         <div>
-            <p class="page-title">Test settings</p>
-        </div>
-        <div>
-            <div class="col-xs-12 col-sm-6 col-lg-3 col-md-6 margin-top settings-tb-container">
-
+            <div class="col-xs-12 col-sm-6 col-lg-3 col-md-6 margin-top settings-tb-container pane">
                 <div>
-                    <SfTextBox Placeholder="First Name" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                    <p class="chart-title chart-subtitle">Test settings</p>
                 </div>
                 <div>
                     <SfTextBox Placeholder="First Name" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
                 </div>
                 <div>
+                    <SfComboBox TValue="string" TItem="GameFields" PopupHeight="230px" Placeholder="Select a game" @bind-Value="@DropVal" DataSource="@Games">
+                        <ComboBoxEvents TValue="string" TItem="GameFields" ValueChange="OnChange"></ComboBoxEvents>
+                        <ComboBoxFieldSettings Text="Text" Value="ID"></ComboBoxFieldSettings>
+                    </SfComboBox>
+                </div>
+                <div>
                     <SfTextBox Placeholder="First Name" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
                 </div>
-                <div >
+                <div>
                     <SfTextBox Placeholder="First Name" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
                 </div>
             </div>
@@ -115,5 +118,29 @@
     public void Dispose()
     {
 
+    }
+
+    public class GameFields
+    {
+        public string ID { get; set; }
+        public string Text { get; set; }
+    }
+    private List<GameFields> Games = new List<GameFields>() {
+        new GameFields(){ ID= "Game1", Text= "American Football" },
+        new GameFields(){ ID= "Game2", Text= "Badminton" },
+        new GameFields(){ ID= "Game3", Text= "Basketball" },
+        new GameFields(){ ID= "Game4", Text= "Cricket" },
+        new GameFields(){ ID= "Game5", Text= "Football" },
+        new GameFields(){ ID= "Game6", Text= "Golf" },
+        new GameFields(){ ID= "Game7", Text= "Hockey" },
+        new GameFields(){ ID= "Game8", Text= "Rugby"},
+        new GameFields(){ ID= "Game9", Text= "Snooker" },
+        new GameFields(){ ID= "Game10", Text= "Tennis"},
+     };
+    public string DropVal = "Game3";
+    public string ChangeValue { get; set; } = "Basketball";
+    public void OnChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, GameFields> args)
+    {
+        this.ChangeValue = args.ItemData?.Text;
     }
 }
