@@ -2,7 +2,7 @@
 using StrategyTester.Interfaces;
 using System;
 
-namespace StrategyTester.Models.Test
+namespace StrategyTester.Models
 {
     public class Candle : IQuote
     {
