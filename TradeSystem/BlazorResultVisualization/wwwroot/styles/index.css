@@ -2691,4 +2691,6 @@ input[type="search"].search::-moz-placeholder {
 .settings-tb-container {
     display: flex;
     flex-direction: column;
+    background-color:#fff;
+
 }
