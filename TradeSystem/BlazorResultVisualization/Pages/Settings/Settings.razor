@@ -66,25 +66,37 @@
 <div class="expense-page content">
     <div class='exp-content-container'>
         
-        <div>
+        <div class="settings-container">
             <div class="col-xs-12 col-sm-6 col-lg-3 col-md-6 margin-top settings-tb-container pane">
                 <div>
                     <p class="chart-title chart-subtitle">Test settings</p>
                 </div>
-                <div>
-                    <SfTextBox Placeholder="First Name" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
-                </div>
-                <div>
-                    <SfComboBox TValue="string" TItem="GameFields" PopupHeight="230px" Placeholder="Select a game" @bind-Value="@DropVal" DataSource="@Games">
+                <div class="cb-container">
+                    <SfComboBox TValue="string" TItem="GameFields" PopupHeight="230px" Placeholder="Select a strategy" @bind-Value="@DropVal" DataSource="@Games">
                         <ComboBoxEvents TValue="string" TItem="GameFields" ValueChange="OnChange"></ComboBoxEvents>
                         <ComboBoxFieldSettings Text="Text" Value="ID"></ComboBoxFieldSettings>
                     </SfComboBox>
                 </div>
-                <div>
-                    <SfTextBox Placeholder="First Name" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                <div class="cb-container">
+                    <SfComboBox TValue="string" TItem="GameFields" PopupHeight="230px" Placeholder="Select a symbol" @bind-Value="@DropVal" DataSource="@Games">
+                        <ComboBoxEvents TValue="string" TItem="GameFields" ValueChange="OnChange"></ComboBoxEvents>
+                        <ComboBoxFieldSettings Text="Text" Value="ID"></ComboBoxFieldSettings>
+                    </SfComboBox>
+                </div>
+                <div class="cb-container">
+                    <SfComboBox TValue="string" TItem="GameFields" PopupHeight="230px" Placeholder="Select a interval" @bind-Value="@DropVal" DataSource="@Games">
+                        <ComboBoxEvents TValue="string" TItem="GameFields" ValueChange="OnChange"></ComboBoxEvents>
+                        <ComboBoxFieldSettings Text="Text" Value="ID"></ComboBoxFieldSettings>
+                    </SfComboBox>
+                </div>
+                <div class="tb-container">
+                    <SfTextBox Placeholder="History range" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                </div>
+                <div class="tb-container">
+                    <SfTextBox Placeholder="Start balance" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
                 </div>
                 <div>
-                    <SfTextBox Placeholder="First Name" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                    <SfButton CssClass="bt-container" IsPrimary="true">Start</SfButton>
                 </div>
             </div>
         </div>
