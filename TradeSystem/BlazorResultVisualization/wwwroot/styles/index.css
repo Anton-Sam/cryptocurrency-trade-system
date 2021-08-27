@@ -2692,7 +2692,26 @@ input[type="search"].search::-moz-placeholder {
     display: flex;
     flex-direction: column;
     background-color:#fff;
-    padding: 15px;
-    margin: 18px;
+    padding: 25px;
+}
 
+.cb-container{
+    margin-top: 10px;
+    margin-bottom:10px;
+}
+
+.tb-container{
+    margin-bottom:5px;
+}
+
+.bt-container{
+    width:100%;
+    margin-top:5px;
+}
+
+.settings-container{
+    height: 100vh;
+    display:flex;
+    justify-content: center;
+    align-items:center;
 }
