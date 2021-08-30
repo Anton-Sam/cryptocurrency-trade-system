@@ -16,8 +16,6 @@ namespace StrategyTester.Models
     public abstract class BaseStrategy
     {
         public IDataProvider DataProvider { get; private set; }
-        public abstract string Symbol { get; set; }
-        public abstract CandleInterval CandleInterval { get; set; }
         public abstract void OnOrderStatusChanged(Order order);
         public abstract void OnCandleClosed(Candle candle);
 
