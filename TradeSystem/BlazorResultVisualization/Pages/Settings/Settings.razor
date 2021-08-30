@@ -72,22 +72,19 @@
                     <p class="chart-title chart-subtitle">Test settings</p>
                 </div>
                 <div class="cb-container">
-                    <SfComboBox TValue="string" TItem="GameFields" PopupHeight="230px" Placeholder="Select a strategy" @bind-Value="@DropVal" DataSource="@Games">
+                    @*<SfComboBox TValue="string" TItem="GameFields" PopupHeight="230px" Placeholder="Select a strategy" @bind-Value="@DropVal" DataSource="@Games">
                         <ComboBoxEvents TValue="string" TItem="GameFields" ValueChange="OnChange"></ComboBoxEvents>
                         <ComboBoxFieldSettings Text="Text" Value="ID"></ComboBoxFieldSettings>
-                    </SfComboBox>
+                    </SfComboBox>*@
                 </div>
                 <div class="cb-container">
-                    <SfComboBox TValue="string" TItem="GameFields" PopupHeight="230px" Placeholder="Select a symbol" @bind-Value="@DropVal" DataSource="@Games">
+                    @*<SfComboBox TValue="string" TItem="GameFields" PopupHeight="230px" Placeholder="Select a symbol" @bind-Value="@DropVal" DataSource="@Games">
                         <ComboBoxEvents TValue="string" TItem="GameFields" ValueChange="OnChange"></ComboBoxEvents>
                         <ComboBoxFieldSettings Text="Text" Value="ID"></ComboBoxFieldSettings>
-                    </SfComboBox>
+                    </SfComboBox>*@
                 </div>
                 <div class="cb-container">
-                    <SfComboBox TValue="string" TItem="GameFields" PopupHeight="230px" Placeholder="Select a interval" @bind-Value="@DropVal" DataSource="@Games">
-                        <ComboBoxEvents TValue="string" TItem="GameFields" ValueChange="OnChange"></ComboBoxEvents>
-                        <ComboBoxFieldSettings Text="Text" Value="ID"></ComboBoxFieldSettings>
-                    </SfComboBox>
+                    <IntervalDropDownList/>
                 </div>
                 <div class="tb-container">
                     <SfTextBox Placeholder="History range" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
@@ -103,56 +100,4 @@
     </div>
 
 </div>
-@code {
-    [CascadingParameter]
-    public TradingDataService TradingDataService { get; set; }
 
-
-    public string SearchValue { get; set; }
-    private bool ShowSpinner = false;
-    private string visibility = "none";
-    private string color = "#FFFFFF";
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        //if (firstRender)
-        //{
-        //    await base.OnAfterRenderAsync(firstRender);
-
-        //}
-    }
-
-    private void OnCreate()
-    {
-        this.visibility = ""; this.color = "";
-    }
-
-    public void Dispose()
-    {
-
-    }
-
-    public class GameFields
-    {
-        public string ID { get; set; }
-        public string Text { get; set; }
-    }
-    private List<GameFields> Games = new List<GameFields>() {
-        new GameFields(){ ID= "Game1", Text= "American Football" },
-        new GameFields(){ ID= "Game2", Text= "Badminton" },
-        new GameFields(){ ID= "Game3", Text= "Basketball" },
-        new GameFields(){ ID= "Game4", Text= "Cricket" },
-        new GameFields(){ ID= "Game5", Text= "Football" },
-        new GameFields(){ ID= "Game6", Text= "Golf" },
-        new GameFields(){ ID= "Game7", Text= "Hockey" },
-        new GameFields(){ ID= "Game8", Text= "Rugby"},
-        new GameFields(){ ID= "Game9", Text= "Snooker" },
-        new GameFields(){ ID= "Game10", Text= "Tennis"},
-     };
-    public string DropVal = "Game3";
-    public string ChangeValue { get; set; } = "Basketball";
-    public void OnChange(Syncfusion.Blazor.DropDowns.ChangeEventArgs<string, GameFields> args)
-    {
-        this.ChangeValue = args.ItemData?.Text;
-    }
-}
