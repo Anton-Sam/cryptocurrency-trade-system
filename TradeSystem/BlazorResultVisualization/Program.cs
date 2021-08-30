@@ -1,12 +1,9 @@
+using BlazorResultVisualization.DataServices;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Syncfusion.Blazor;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BlazorResultVisualization
@@ -24,7 +21,7 @@ namespace BlazorResultVisualization
             //    (spds => spds.BaseAddress = new Uri(builder.Configuration["api_base_url"]));
 
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddSingleton()
+            builder.Services.AddSingleton(new SettingsDataService());
 
             builder.Services.AddSyncfusionBlazor();
 
