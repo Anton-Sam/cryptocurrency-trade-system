@@ -43,6 +43,8 @@
 @code {
     [CascadingParameter]
     private TradingDataService ExpenseDataService { get; set; }
+    [Inject]
+    public SettingsDataService SettingsDataService { get; set; }
     [Parameter]
     public System.Action OnSidebarCreate { get; set; }
     private SfSidebar Sidebar;
@@ -63,6 +65,8 @@
     }
     private async Task CloseSidebar()
     {
+
+        SettingsDataService.HistoryRange += 100;
         if (Sidebar.IsOpen)
         {
             await this.Sidebar.Hide();
