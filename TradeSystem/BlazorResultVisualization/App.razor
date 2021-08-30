@@ -14,9 +14,16 @@
 @code {
     public TradingDataService TradingDataService { get; set; }
 
+    [Inject]
+    public SettingsDataService SettingsDataService { get; set; } = new SettingsDataService { HistoryRange = 1000 };
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         TradingDataService = new TradingDataService();
+        //SettingsDataService = new SettingsDataService
+        //{
+        //    HistoryRange = 1000
+        //};
     }
 }
