@@ -10,7 +10,8 @@ namespace BlazorResultVisualization.DataServices
     public class SettingsDataService
     {
         public Dictionary<string,BaseStrategy> StrategiesDict { get; set; }
-        public List<string> Symbols { get; set; }
+        public BaseStrategy Strategy { get; set; }
+        public string Symbol { get; set; }
         public CandleInterval Interval { get; set; }
         public decimal StartBalance { get; set; }
         public int HistoryRange { get; set; }
