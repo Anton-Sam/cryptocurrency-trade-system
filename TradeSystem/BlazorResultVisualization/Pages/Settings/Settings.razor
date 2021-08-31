@@ -72,16 +72,10 @@
                     <p class="chart-title chart-subtitle">Test settings</p>
                 </div>
                 <div class="cb-container">
-                    @*<SfComboBox TValue="string" TItem="GameFields" PopupHeight="230px" Placeholder="Select a strategy" @bind-Value="@DropVal" DataSource="@Games">
-                        <ComboBoxEvents TValue="string" TItem="GameFields" ValueChange="OnChange"></ComboBoxEvents>
-                        <ComboBoxFieldSettings Text="Text" Value="ID"></ComboBoxFieldSettings>
-                    </SfComboBox>*@
+                    <StrategiesDropDownList />
                 </div>
                 <div class="cb-container">
-                    @*<SfComboBox TValue="string" TItem="GameFields" PopupHeight="230px" Placeholder="Select a symbol" @bind-Value="@DropVal" DataSource="@Games">
-                        <ComboBoxEvents TValue="string" TItem="GameFields" ValueChange="OnChange"></ComboBoxEvents>
-                        <ComboBoxFieldSettings Text="Text" Value="ID"></ComboBoxFieldSettings>
-                    </SfComboBox>*@
+                    <SymbolsDropDownList/>
                 </div>
                 <div class="cb-container">
                     <IntervalDropDownList/>

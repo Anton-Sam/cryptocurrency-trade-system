@@ -1,0 +1,4 @@
+﻿<SfDropDownList TItem="string" TValue="string" PopupHeight="230px" Placeholder="Select strategy" @bind-Value="@_selectedStrategyName" DataSource="@SettingsDataService.StrategiesDict.Keys">
+    <DropDownListFieldSettings Value="Strategy"></DropDownListFieldSettings>
+    <DropDownListEvents TItem="string" TValue="string" ValueChange="OnValueChange"></DropDownListEvents>
+</SfDropDownList>
