@@ -1,0 +1,60 @@
+﻿<div class="col-xs-12 col-sm-6 col-md-6 chart-container">
+    <div class="chart-padding">
+        <div class="column-chart">
+            <SfChart>
+                <ChartAnnotations>
+                    <ChartAnnotation X="@chartXAnnoation" Y="9%" CoordinateUnits="Units.Pixel" Region="Regions.Chart">
+                        <ContentTemplate>
+                            <p style="font-family:Roboto;font-size: 16px;margin-left: 15px;font-weight: 400;font-weight: 400;letter-spacing: 0.02em;line-height: 16px;color: #797979 !important;">Orders - Count</p>
+                        </ContentTemplate>
+                    </ChartAnnotation>
+                </ChartAnnotations>
+                <ChartArea><ChartAreaBorder Width="0"></ChartAreaBorder></ChartArea>
+                <ChartPrimaryXAxis TickPosition="AxisPosition.Inside" LabelPosition="AxisPosition.Inside" ValueType="Syncfusion.Blazor.Charts.ValueType.Category" Interval="1">
+                    <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
+                    <ChartAxisLabelStyle Color="#ffffff"></ChartAxisLabelStyle>
+                </ChartPrimaryXAxis>
+                <ChartPrimaryYAxis Minimum="0" Maximum="300" Interval="50">
+                    <ChartAxisLineStyle Width="0"></ChartAxisLineStyle>
+                    <ChartAxisLabelStyle Color="transparent"></ChartAxisLabelStyle>
+                    <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
+                    <ChartAxisMinorGridLines Width="0"></ChartAxisMinorGridLines>
+                    <ChartAxisMajorTickLines Width="0"></ChartAxisMajorTickLines>
+                    <ChartAxisMinorTickLines Width="0"></ChartAxisMinorTickLines>
+                </ChartPrimaryYAxis>
+                <ChartSeriesCollection>
+                    <ChartSeries DataSource="@ChartPoints" XName="Food" YName="Trade" Type="ChartSeriesType.Column">
+                        <ChartMarker>
+                            <ChartDataLabel Visible="true" Position="Syncfusion.Blazor.Charts.LabelPosition.Top">
+                                <ChartDataLabelFont FontWeight="600" Color="#ffffff"></ChartDataLabelFont>
+                            </ChartDataLabel>
+                        </ChartMarker>
+                        <ChartCornerRadius BottomLeft="10" BottomRight="10" TopLeft="10" TopRight="10"></ChartCornerRadius>
+                    </ChartSeries>
+                </ChartSeriesCollection>
+                <ChartTooltipSettings Enable="true"></ChartTooltipSettings>
+                <ChartLegendSettings Visible="false"></ChartLegendSettings>
+            </SfChart>
+        </div>
+    </div>
+</div>
+
+@code{
+    private string chartXAnnoation = "75px";
+    public List<RoundedColumnChartData> ChartPoints { get; set; } = new List<RoundedColumnChartData>
+{
+        new RoundedColumnChartData { Food = "Buy", Trade = 106 },
+        new RoundedColumnChartData { Food = "Sell", Trade = 103 },
+        new RoundedColumnChartData { Food = "Canceled", Trade = 24 },
+
+    };
+    protected override void OnInitialized()
+    {
+
+    }
+    public class RoundedColumnChartData
+    {
+        public string Food { get; set; }
+        public double Trade { get; set; }
+    }
+}
