@@ -13,6 +13,7 @@ namespace BlazorTestingsSystem
     {
         public static void Main(string[] args)
         {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NDc1OTA4QDMxMzkyZTMyMmUzMERaSERFMzhJdkRvVlN2cVlHT0t0WFVVczQvQmxvNU9PNzRLM3VqYjlEaWc9");
             CreateHostBuilder(args).Build().Run();
         }
 
