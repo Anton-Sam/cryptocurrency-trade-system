@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrategyTester", "StrategyT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestLib", "TestLib\TestLib.csproj", "{1C937AA2-D0EA-412E-8808-351C9F8AF681}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorTestingsSystem", "BlazorTestingsSystem\BlazorTestingsSystem.csproj", "{681BF9B9-4104-4E81-B679-DAA6E0C24452}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorTestingsSystem", "BlazorTestingsSystem\BlazorTestingsSystem.csproj", "{681BF9B9-4104-4E81-B679-DAA6E0C24452}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
