@@ -1,9 +1,12 @@
+using BlazorTestingsSystem.DataServices;
+using BlazorTestingsSystem.Strategies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StrategyTester.Models;
 using Syncfusion.Blazor;
 using System;
 using System.Collections.Generic;
@@ -32,6 +35,7 @@ namespace BlazorTestingsSystem
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSyncfusionBlazor();
+            services.AddSingleton(ConfigureStrategies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +62,15 @@ namespace BlazorTestingsSystem
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+        }
+
+        private static SettingsDataService ConfigureStrategies()
+        {
+            //var client = new BinanceClient();
+            var settings = new SettingsDataService();
+            settings.StrategiesDict = new Dictionary<string, BaseStrategy>();
+            settings.StrategiesDict.Add("TwoEma", new TwoEmaStrategy());
+            return settings;
         }
     }
 }
