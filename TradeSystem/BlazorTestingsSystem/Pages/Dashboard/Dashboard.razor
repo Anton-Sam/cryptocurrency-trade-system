@@ -2,32 +2,16 @@
 
 @implements IDisposable;
 
-@if (ShowSpinner)
-{
-    <div class="sb-content-overlay">
-        <div class="sb-loading">
-            <svg class="circular" height="40" width="40">
-                <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="6" stroke-miterlimit="10" />
-            </svg>
-        </div>
-    </div>
-    <style>
-        #main-page {
-            pointer-events: none;
-            cursor: auto;
-        }
-    </style>
-}
 
 <div class="control-section dashboard-page">
     <div>
         <ResultCards @ref="cardsRef"></ResultCards>
     </div>
-    <CandleChart @ref="candleChartRef" Render="@Render"></CandleChart>
+    <CandleChart @ref="candleChartRef" ></CandleChart>
     <div>
         <div>
             <div class="line-chart-area">
-                <BalanceChart @ref="balanceChartRef" Render="@Render" LineChartData="@lineChartData"></BalanceChart>
+                <BalanceChart @ref="balanceChartRef" LineChartData="@lineChartData"></BalanceChart>
             </div>
             <div class="column-chart-area">
                 <OrdersChart @ref="ordersChartRef"></OrdersChart>
@@ -70,14 +54,13 @@
 
     };
 
-    private bool ShowSpinner = true;
-    private bool Render;
+
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         InitializeData();
-        ShowSpinner = false;
+      
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -88,7 +71,6 @@
             await InvokeAsync(async () =>
             {
                 await Task.Delay(1);
-                Render = true;
                 this.UpdateChartData();
                 StateHasChanged();
             });

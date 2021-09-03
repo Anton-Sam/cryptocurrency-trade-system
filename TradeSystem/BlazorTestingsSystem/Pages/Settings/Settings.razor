@@ -1,23 +1,7 @@
 ﻿@page "/settings"
+@using System.ComponentModel.DataAnnotations
 
 @implements IDisposable;
-
-@if (ShowSpinner)
-{
-    <div class="sb-content-overlay">
-        <div class="sb-loading">
-            <svg class="circular" height="40" width="40">
-                <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="6" stroke-miterlimit="10" />
-            </svg>
-        </div>
-    </div>
-    <style>
-        #main-page {
-            pointer-events: none;
-            cursor: auto;
-        }
-    </style>
-}
 
 <style>
     #main-page {
@@ -65,33 +49,84 @@
 
 <div class="expense-page content">
     <div class='exp-content-container'>
-        
+
         <div class="settings-container">
             <div class="col-xs-12 col-sm-6 col-lg-3 col-md-6 margin-top settings-tb-container pane">
-                <div>
-                    <p class="chart-title chart-subtitle">Test settings</p>
-                </div>
-                <div class="cb-container">
-                    <StrategiesDropDownList />
-                </div>
-                <div class="cb-container">
-                    <SymbolsDropDownList/>
-                </div>
-                <div class="cb-container">
-                    <IntervalDropDownList/>
-                </div>
-                <div class="tb-container">
-                    <SfTextBox Placeholder="History range" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
-                </div>
-                <div class="tb-container">
-                    <SfTextBox Placeholder="Start balance" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
-                </div>
-                <div>
-                    <SfButton CssClass="bt-container" IsPrimary="true">Start</SfButton>
-                </div>
+                @*<div>
+                        <p class="chart-title chart-subtitle">Test settings</p>
+                    </div>
+                    <div class="cb-container">
+                        <StrategiesDropDownList />
+                    </div>
+                    <div class="cb-container">
+                        <SymbolsDropDownList />
+                    </div>
+                    <div class="cb-container">
+                        <IntervalDropDownList />
+                    </div>
+                    <div class="tb-container">
+                        <SfTextBox Placeholder="History range" @bind-Value="@Value" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+
+                    </div>
+                    <div class="tb-container">
+                        <SfTextBox Placeholder="Start balance" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                    </div>
+                    <div>
+                        <SfButton CssClass="bt-container" IsPrimary="true">Start</SfButton>
+                    </div>*@
+
+
+
+
+                <EditForm EditContext="@editContext">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <StrategiesDropDownList />
+                        <SymbolsDropDownList />
+                        <SfTextBox Placeholder="Start balance" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                        <SfTextBox Placeholder="Test Property" FloatLabelType='@FloatLabelType.Auto' @bind-Value="model.TestProperty" CssClass="@cssClass" Blur="TestPropertyBlurEvent"></SfTextBox>
+                        <ValidationMessage For="() => model.TestProperty" />
+                    </div>
+                    <SfButton IsPrimary="true" HtmlAttributes="@(new Dictionary<string, object> { { "type", "submit" } })">Save</SfButton>
+                </EditForm>
+
+
+
             </div>
         </div>
     </div>
 
 </div>
 
+@code
+{
+    private void click()
+    {
+        cssClass = "cssclasschag";
+    }
+    private Test model;
+    private EditContext editContext;
+    private string cssClass { get; set; }
+    protected override void OnInitialized()
+    {
+        model = new Test();
+        editContext = new EditContext(model);
+    }
+    public class Test
+    {
+        [Required]
+        public string TestProperty { get; set; }
+    }
+    public void TestPropertyBlurEvent(FocusOutEventArgs args)
+    {
+        if (!editContext.Validate())
+        {
+            cssClass = "e-error";
+        }
+        else
+        {
+            cssClass = "e-success";
+        }
+        StateHasChanged();
+    }
+}
