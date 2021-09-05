@@ -1,8 +1,7 @@
 ﻿@page "/settings"
-@using System.ComponentModel.DataAnnotations
-
-@implements IDisposable;
-
+@using AutoMapper;
+@inject IMapper Mapper;
+@*@inherits OwningComponentBase*@
 <style>
     #main-page {
         overflow-x: hidden;
@@ -52,46 +51,39 @@
 
         <div class="settings-container">
             <div class="col-xs-12 col-sm-6 col-lg-3 col-md-6 margin-top settings-tb-container pane">
-                @*<div>
-                        <p class="chart-title chart-subtitle">Test settings</p>
-                    </div>
-                    <div class="cb-container">
-                        <StrategiesDropDownList />
-                    </div>
-                    <div class="cb-container">
-                        <SymbolsDropDownList />
-                    </div>
-                    <div class="cb-container">
-                        <IntervalDropDownList />
-                    </div>
-                    <div class="tb-container">
-                        <SfTextBox Placeholder="History range" @bind-Value="@Value" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
-
-                    </div>
-                    <div class="tb-container">
-                        <SfTextBox Placeholder="Start balance" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
-                    </div>
-                    <div>
-                        <SfButton CssClass="bt-container" IsPrimary="true">Start</SfButton>
-                    </div>*@
-
-
-
-
-                <EditForm EditContext="@editContext">
+                <EditForm Model="@_settingsDetails" OnValidSubmit="@StartTest">
                     <DataAnnotationsValidator />
-                    <div class="form-group">
-                        <StrategiesDropDownList />
-                        <SymbolsDropDownList />
-                        <SfTextBox Placeholder="Start balance" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
-                        <SfTextBox Placeholder="Test Property" FloatLabelType='@FloatLabelType.Auto' @bind-Value="model.TestProperty" CssClass="@cssClass" Blur="TestPropertyBlurEvent"></SfTextBox>
-                        <ValidationMessage For="() => model.TestProperty" />
+                    <div class="form-row">
+                        <SfDropDownList Placeholder="Strategy" TValue="string" TItem="string" @bind-Value="@_settingsDetails.StrategyName" DataSource="@_service.StrategiesDict.Keys" FloatLabelType="FloatLabelType.Auto">
+                            <DropDownListFieldSettings Value="Strategy"></DropDownListFieldSettings>
+                        </SfDropDownList>
+                        <ValidationMessage For="@(() => _settingsDetails.CandleInterval)"></ValidationMessage>
                     </div>
-                    <SfButton IsPrimary="true" HtmlAttributes="@(new Dictionary<string, object> { { "type", "submit" } })">Save</SfButton>
+                    <div class="form-row">
+                        <SfDropDownList Placeholder="Symbol" TValue="string" TItem="string" @bind-Value="@_settingsDetails.Symbol" DataSource="@_service.Symbols" FloatLabelType="FloatLabelType.Auto">
+                            <DropDownListFieldSettings Value="Symbol"></DropDownListFieldSettings>
+                        </SfDropDownList>
+                        <ValidationMessage For="@(() => _settingsDetails.CandleInterval)"></ValidationMessage>
+                    </div>
+                    <div class="form-row">
+                        <SfDropDownList Placeholder="Candle interval" TValue="CandleInterval?" TItem="Interval" @bind-Value="@_settingsDetails.CandleInterval" DataSource="@_service.Intervals" FloatLabelType="FloatLabelType.Auto">
+                            <DropDownListFieldSettings Value="CandleInterval"></DropDownListFieldSettings>
+                        </SfDropDownList>
+                        <ValidationMessage For="@(() => _settingsDetails.CandleInterval)"></ValidationMessage>
+                    </div>
+                    <div class="form-row">
+                        <SfNumericTextBox @bind-Value="@_settingsDetails.HistoryRange" Placeholder="History range" TValue="int?" FloatLabelType="FloatLabelType.Auto" Min="0"></SfNumericTextBox>
+                        <ValidationMessage For="@(() => _settingsDetails.HistoryRange)"></ValidationMessage>
+                    </div>
+                    <div class="form-row">
+                        <SfNumericTextBox @bind-Value="@_settingsDetails.StartBalance" Placeholder="Start balance" TValue="double?" FloatLabelType="FloatLabelType.Auto" Min="0"></SfNumericTextBox>
+                        <ValidationMessage For="@(() => _settingsDetails.StartBalance)"></ValidationMessage>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
                 </EditForm>
-
-
-
             </div>
         </div>
     </div>
@@ -100,33 +92,36 @@
 
 @code
 {
-    private void click()
+    SettingsDetails _settingsDetails = new SettingsDetails();
+    SettingsDataService _service = new SettingsDataService();
+
+    //[Inject]
+    //private  IMapper mapper;
+
+    //protected override void OnInitialized()
+    //{
+    //    _settingsDetails = new SettingsDetails();
+    //    //_intervals = GetEnumDisplayNames<CandleInterval>();
+
+    //}
+
+    public Settings()
     {
-        cssClass = "cssclasschag";
+        var a = 1;
     }
-    private Test model;
-    private EditContext editContext;
-    private string cssClass { get; set; }
-    protected override void OnInitialized()
+
+    public void StartTest()
     {
-        model = new Test();
-        editContext = new EditContext(model);
+        var strategy = _service.StrategiesDict[_settingsDetails.StrategyName];
+        var symbol = _settingsDetails.Symbol;
+        var candleInterval = (StrategyTester.Enums.CandleInterval)Enum.Parse(typeof(StrategyTester.Enums.CandleInterval), _settingsDetails.CandleInterval.Value.ToString());
+        var historyRange = _settingsDetails.HistoryRange.Value;
+        var startBalance = (decimal)_settingsDetails.StartBalance.Value;
+        var result = strategy.StartTest(symbol, candleInterval, historyRange, startBalance);
+        var candles=Mapper.Map<IEnumerable<Candle>>(result.HistoryData);
+       
+
     }
-    public class Test
-    {
-        [Required]
-        public string TestProperty { get; set; }
-    }
-    public void TestPropertyBlurEvent(FocusOutEventArgs args)
-    {
-        if (!editContext.Validate())
-        {
-            cssClass = "e-error";
-        }
-        else
-        {
-            cssClass = "e-success";
-        }
-        StateHasChanged();
-    }
+}
+
 }
