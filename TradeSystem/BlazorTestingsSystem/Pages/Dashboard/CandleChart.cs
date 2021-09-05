@@ -12,8 +12,8 @@ namespace BlazorTestingsSystem.Pages.Dashboard
         [CascadingParameter]
         public TradingDataService TradingDataService { get; set; }
 
-        [Inject]
-        public SettingsDataService SettingsDataService { get; set; }
+        
+        //public SettingsDataService SettingsDataService { get; set; }
         [Parameter]
         public bool Render { get; set; } = true;
         private List<CandleData> ChartPoints { get; set; } = new List<CandleData>();
@@ -58,7 +58,7 @@ namespace BlazorTestingsSystem.Pages.Dashboard
 
         private void UpdatePieChart()
         {
-            var a = SettingsDataService.HistoryRange;
+            //var a = SettingsDataService.HistoryRange;
 
             return;
         }

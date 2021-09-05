@@ -12,8 +12,8 @@ namespace BlazorTestingsSystem.Pages.Dashboard
         [CascadingParameter]
         private TradingDataService TradingDataService { get; set; }
 
-        [Inject]
-        public SettingsDataService SettingsDataService { get; set; }
+        //[Inject]
+        //public SettingsDataService SettingsDataService { get; set; }
 
         private string TotalIncome = "$0";
         private string TotalExpense = "$0";
