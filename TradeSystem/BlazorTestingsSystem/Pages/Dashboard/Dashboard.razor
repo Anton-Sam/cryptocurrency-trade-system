@@ -11,10 +11,10 @@
     <div>
         <div>
             <div class="line-chart-area">
-                <BalanceChart @ref="balanceChartRef" LineChartData="@lineChartData"></BalanceChart>
+                <BalanceChart @ref="balanceChartRef" ></BalanceChart>
             </div>
             <div class="column-chart-area">
-                <OrdersChart @ref="ordersChartRef"></OrdersChart>
+                <OrdersChart></OrdersChart>
             </div>
         </div>
         <OrdersGrid></OrdersGrid>
@@ -28,7 +28,6 @@
     private ResultCards cardsRef;
     private CandleChart candleChartRef;
     private BalanceChart balanceChartRef;
-    private OrdersChart ordersChartRef;
 
     private List<StrategyTester.Models.BalanceChange> lineChartData = new List<StrategyTester.Models.BalanceChange>();
 

@@ -95,8 +95,8 @@
     SettingsDetails _settingsDetails = new SettingsDetails();
     SettingsDataService _service = new SettingsDataService();
 
-    //[Inject]
-    //private  IMapper mapper;
+    [CascadingParameter]
+    TradeResultDataService TradeResultDataService { get; set; }
 
     //protected override void OnInitialized()
     //{
@@ -118,9 +118,9 @@
         var historyRange = _settingsDetails.HistoryRange.Value;
         var startBalance = (decimal)_settingsDetails.StartBalance.Value;
         var result = strategy.StartTest(symbol, candleInterval, historyRange, startBalance);
-        var candles=Mapper.Map<IEnumerable<Candle>>(result.HistoryData);
-       
-
+        TradeResultDataService.Candles=Mapper.Map<IEnumerable<Candle>>(result.HistoryData);
+        TradeResultDataService.Balances = Mapper.Map<IEnumerable<Balance>>(result.BalanceChanges);
+        TradeResultDataService.Orders = Mapper.Map<IEnumerable<Order>>(result.OrdersHistory);
     }
 }
 

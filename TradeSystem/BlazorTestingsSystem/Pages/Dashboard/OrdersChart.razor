@@ -1,4 +1,6 @@
-﻿<div class="col-xs-12 col-sm-6 col-md-6 chart-container">
+﻿@using BlazorTestingsSystem.Enums
+
+<div class="col-xs-12 col-sm-6 col-md-6 chart-container">
     <div class="chart-padding">
         <div class="column-chart">
             <SfChart>
@@ -23,7 +25,7 @@
                     <ChartAxisMinorTickLines Width="0"></ChartAxisMinorTickLines>
                 </ChartPrimaryYAxis>
                 <ChartSeriesCollection>
-                    <ChartSeries DataSource="@ChartPoints" XName="Food" YName="Trade" Type="ChartSeriesType.Column">
+                    <ChartSeries DataSource="@chartPoints" XName="Name" YName="Count" Type="ChartSeriesType.Column">
                         <ChartMarker>
                             <ChartDataLabel Visible="true" Position="Syncfusion.Blazor.Charts.LabelPosition.Top">
                                 <ChartDataLabelFont FontWeight="600" Color="#ffffff"></ChartDataLabelFont>
@@ -40,21 +42,33 @@
 </div>
 
 @code{
+    [CascadingParameter]
+    private TradeResultDataService TradeResultDataService { get; set; }
+
     private string chartXAnnoation = "75px";
-    public List<RoundedColumnChartData> ChartPoints { get; set; } = new List<RoundedColumnChartData>
-{
-        new RoundedColumnChartData { Food = "Buy", Trade = 106 },
-        new RoundedColumnChartData { Food = "Sell", Trade = 103 },
-        new RoundedColumnChartData { Food = "Canceled", Trade = 24 },
+    private List<RoundedColumnChartData> chartPoints { get; set; } = new List<RoundedColumnChartData>();
 
-    };
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-
+        await base.OnInitializedAsync();
+        UpdateChart();
     }
+
+    private void UpdateChart()
+    {
+        if (TradeResultDataService.Orders is null)
+            return;
+        var cancelOrdersCount = TradeResultDataService.Orders.Where(o => o.Status == OrderStatus.Canceled).Count();
+        var buyFilledOrdersCount = TradeResultDataService.Orders.Where(o => o.Status == OrderStatus.Filled && o.Side == OrderSide.Buy).Count();
+        var sellFilledOrdersCount = TradeResultDataService.Orders.Where(o => o.Status == OrderStatus.Filled && o.Side == OrderSide.Sell).Count();
+        chartPoints.Add(new RoundedColumnChartData { Name = "Buy", Count = buyFilledOrdersCount });
+        chartPoints.Add(new RoundedColumnChartData { Name = "Sell", Count = sellFilledOrdersCount });
+        chartPoints.Add(new RoundedColumnChartData { Name = "Cancel", Count = cancelOrdersCount });
+    }
+
     public class RoundedColumnChartData
     {
-        public string Food { get; set; }
-        public double Trade { get; set; }
+        public string Name { get; set; }
+        public double Count { get; set; }
     }
 }

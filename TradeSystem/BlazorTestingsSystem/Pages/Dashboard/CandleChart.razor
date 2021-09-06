@@ -39,9 +39,9 @@
                                 <ChartCrosshairLine Width="1"></ChartCrosshairLine>
                             </ChartCrosshairSettings>
                             <ChartSeriesCollection>
-                                <ChartSeries Type="ChartSeriesType.Column" DataSource="@TradeResultDataService.Candles" Name="Volume" XName="Period" YName="Volume">
+                                <ChartSeries Type="ChartSeriesType.Column" DataSource="@_candles" Name="Volume" XName="Date" YName="Volume">
                                 </ChartSeries>
-                                <ChartSeries DataSource="@TradeResultDataService.Candles" YAxisName="secondary" Name="Apple Inc" XName="Date" High="High" Volume="Volume" Low="Low" Open="Open" Close="Close"
+                                <ChartSeries DataSource="@_candles" YAxisName="secondary" Name="Apple Inc" XName="Date" High="High" Volume="Volume" Low="Low" Open="Open" Close="Close"
                                              BearFillColor="#2ecd71" BullFillColor="#e74c3d" Type="ChartSeriesType.Candle">
                                 </ChartSeries>
                             </ChartSeriesCollection>
@@ -55,9 +55,9 @@
 </div>
 
 @code{
-        [CascadingParameter]
-        public TradeResultDataService TradeResultDataService { get; set; }
-        
+    //[CascadingParameter]
+    //public TradeResultDataService TradeResultDataService { get; set; }
+
     }
 
 <style>
