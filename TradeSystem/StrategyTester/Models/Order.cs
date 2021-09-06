@@ -26,16 +26,9 @@ namespace StrategyTester.Models
             return MemberwiseClone();
         }
 
-        //object ICloneable.Clone()
-        //{
-        //    return Clone();
-        //}
-
         public override string ToString()
         {
             return $"{Id} {Symbol} {ClientOrderId} {Status} {Type} {Price} {Quantity} {CreateTime.ToString("dd/MM/yyyy HH:mm")} {UpdateTime.ToString("dd/MM/yyyy HH:mm")}";
         }
-
-        
     }
 }
