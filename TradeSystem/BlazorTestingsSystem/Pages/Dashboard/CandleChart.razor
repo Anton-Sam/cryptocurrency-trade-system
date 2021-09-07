@@ -1,6 +1,4 @@
-﻿@implements IDisposable;
-
-<div class="pie-chart-container">
+﻿<div class="pie-chart-container">
     <div class="row pie-chart" id="totalExpense">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="pane col-xs-12 col-sm-12 col-md-12 pie-container">
@@ -55,10 +53,17 @@
 </div>
 
 @code{
-    //[CascadingParameter]
-    //public TradeResultDataService TradeResultDataService { get; set; }
+    [CascadingParameter]
+    public TradeResultDataService TradeResultDataService { get; set; }
 
+    private IEnumerable<Candle> _candles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _candles = TradeResultDataService.Candles?.ToArray();
     }
+}
 
 <style>
     .chartLegend .e-grid {

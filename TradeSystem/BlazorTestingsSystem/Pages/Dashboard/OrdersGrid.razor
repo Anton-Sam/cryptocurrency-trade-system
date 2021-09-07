@@ -1,44 +1,49 @@
 ﻿@using BlazorTestingsSystem.Enums
-
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.TreeGrid;
 <div class="row recent-expense-grid">
     <div class="col-xs-6 col-sm-6 col-md-12" style="width:100%">
-
-        <SfGrid SelectedRowIndex=2 DataSource="@ordersData" Height="800px">
+        @*<div class="col-lg-12 control-section">
+            <div class="content-wrapper">
+                <div class="row">*@
+        <SfGrid DataSource="@ordersData" AllowPaging="true" Height="400" RowHeight="25">
             <GridTemplates>
                 <ToolbarTemplate>
                     <SfToolbar>
                         <ToolbarItems>
-                            <ToolbarItem Text="Recent Transactions"></ToolbarItem>
+                            <ToolbarItem Text="Orders History"></ToolbarItem>
                         </ToolbarItems>
                     </SfToolbar>
                 </ToolbarTemplate>
             </GridTemplates>
-            @*<GridEvents RowSelected="RowSelecthandler" TValue="OrderData"></GridEvents>*@
-        <GridColumns>
-            <GridColumn Field=@nameof(OrderData.Id) HeaderText="Id" Width="110"> </GridColumn>
-            <GridColumn Field=@nameof(OrderData.ClinetOrderId) HeaderText="Client order Id" Width="110"></GridColumn>
-            <GridColumn Field=@nameof(OrderData.Side) HeaderText="Order side" Width="110"></GridColumn>
-            <GridColumn Field=@nameof(OrderData.Type) HeaderText="Order type" Width="110"></GridColumn>
-            <GridColumn Field=@nameof(OrderData.Price) HeaderText="Price" Width="110"></GridColumn>
-            <GridColumn Field=@nameof(OrderData.Quantity) HeaderText="Quantity" Width="110"></GridColumn>
-            <GridColumn Field=@nameof(OrderData.CreateTime) HeaderText="Create time" Width="110"></GridColumn>
-        </GridColumns>
-        </SfGrid>
-    </div>
-</div>
-@*<div class="row recent-expense-grid margin-top-10">
-    <div class="col-xs-6 col-sm-6 col-md-12" style="width:100%">
-        <SfGrid DataSource="@GridData" Query="@(new Query().Where("EmployeeID", "equal", RowIndex))">
+            <GridEvents RowSelected="RowSelecthandler" TValue="OrderData"></GridEvents>
             <GridColumns>
-                <GridColumn Field=@nameof(Order.OrderID) HeaderText="Order ID" Width="110"> </GridColumn>
-                <GridColumn Field=@nameof(Order.ShipName) HeaderText="Ship Name" Width="110"></GridColumn>
-                <GridColumn Field=@nameof(Order.ShipCountry) HeaderText="Ship Country" Width="110"></GridColumn>
-                <GridColumn Field=@nameof(Order.ShipAddress) HeaderText="Ship Address" Width="110"></GridColumn>
+                <GridColumn Field=@nameof(OrderData.Id) HeaderText="Id" Width="110"> </GridColumn>
+                <GridColumn Field=@nameof(OrderData.ClinetOrderId) HeaderText="Client order Id" Width="110"></GridColumn>
+                <GridColumn Field=@nameof(OrderData.Side) HeaderText="Order side" Width="110"></GridColumn>
+                <GridColumn Field=@nameof(OrderData.Type) HeaderText="Order type" Width="110"></GridColumn>
+                <GridColumn Field=@nameof(OrderData.Price) HeaderText="Price" Width="110"></GridColumn>
+                <GridColumn Field=@nameof(OrderData.Quantity) HeaderText="Quantity" Width="110"></GridColumn>
+                <GridColumn Field=@nameof(OrderData.CreateTime) HeaderText="Create time" Width="110"></GridColumn>
             </GridColumns>
         </SfGrid>
+        <!--</div>
+            </div>-->
+        <div class="row  margin-top-10">
+                <div class="col-xs-6 col-sm-6 col-md-12" style="width:100%;height:200px">
+                    <SfGrid DataSource="@orderDetails" Query="@(new Query().Where("Id", "equal", RowIndex))" AllowPaging="true" Height="100%">
+                        <GridColumns>
+                            <GridColumn Field=@nameof(OrderDetails.Id) HeaderText="Order ID" Width="110"> </GridColumn>
+                            <GridColumn Field=@nameof(OrderDetails.Status) HeaderText="Order status" Width="110"></GridColumn>
+                            <GridColumn Field=@nameof(OrderDetails.UpdateTime) HeaderText="Update time" Width="110"></GridColumn>
+                        </GridColumns>
+                    </SfGrid>
+                </div>
+            </div>
+        <!--</div>
+        </div>-->
     </div>
-</div>*@
-
+</div>
 
 
 <style>
@@ -59,9 +64,14 @@
 
     private List<OrderData> ordersData;
     private List<OrderDetails> orderDetails;
-
+    public string RowIndex { get; set; }
     public IEnumerable<Order> GridData { get; set; }
 
+    public void RowSelecthandler(RowSelectEventArgs<OrderData> Args)
+    {
+        //SelectedCustomer = Args.Data.CustomerName;
+        RowIndex = Args.Data.Id;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -100,13 +110,13 @@
             var firstOrder = gr.First();
             ordersData.Add(new OrderData
             {
-                Id=gr.Key,
-                ClinetOrderId=firstOrder.ClientOrderId,
-                Side=firstOrder.Side,
-                Type=firstOrder.Type,
-                Price=firstOrder.Price,
-                Quantity=firstOrder.Quantity,
-                CreateTime=firstOrder.CreateTime
+                Id = gr.Key,
+                ClinetOrderId = firstOrder.ClientOrderId,
+                Side = firstOrder.Side,
+                Type = firstOrder.Type,
+                Price = firstOrder.Price,
+                Quantity = firstOrder.Quantity,
+                CreateTime = firstOrder.CreateTime
             });
             orderDetails.AddRange(gr.Select(o =>
             new OrderDetails
@@ -118,3 +128,45 @@
         }
     }
 }
+
+
+@*<SfTreeGrid DataSource="@TreeGridData" IdMapping="TaskId" ParentIdMapping="ParentId" TreeColumnIndex="1"  RowHeight="20" Height="400" AllowPaging="true">
+        <TreeGridColumns>
+            <TreeGridColumn Field="TaskId" HeaderText="Task ID" Width="100" TextAlign="TextAlign.Right"></TreeGridColumn>
+            <TreeGridColumn Field="TaskName" HeaderText="Task Name" Width="220" IsFrozen="true"></TreeGridColumn>
+            <TreeGridColumn Field="Duration" HeaderText="Duration" Width="180" TextAlign="TextAlign.Right" IsFrozen="true"></TreeGridColumn>
+            <TreeGridColumn Field="Progress" HeaderText="Progress" Width="180"></TreeGridColumn>
+            <TreeGridColumn Field="Priority" HeaderText="Priority" Width="180"></TreeGridColumn>
+        </TreeGridColumns>
+    </SfTreeGrid>
+
+    @code{
+        public List<BusinessObject> TreeGridData { get; set; }
+        protected override void OnInitialized()
+        {
+            this.TreeGridData = new List<BusinessObject>();
+            for (var i=0;i<30;i++)
+            {
+                TreeGridData.Add(new BusinessObject
+                {
+                    TaskId = i.ToString(),
+                    TaskName = "Task" + i,
+                    Duration = 10,
+                    Progress = "runing",
+                    Priority = "high"
+                });
+            }
+        }
+
+        public class BusinessObject
+        {
+            public string TaskId { get; set; }
+            public string TaskName { get; set; }
+            public int Duration { get; set; }
+            public string Progress { get; set; }
+            public string Priority { get; set; }
+        }
+    }*@
+
+
+

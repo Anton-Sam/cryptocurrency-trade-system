@@ -1,17 +1,14 @@
 ﻿@page "/"
 
-@implements IDisposable;
-
-
 <div class="control-section dashboard-page">
     <div>
-        <ResultCards @ref="cardsRef"></ResultCards>
+        <ResultCards></ResultCards>
     </div>
-    <CandleChart @ref="candleChartRef" ></CandleChart>
+    <CandleChart></CandleChart>
     <div>
         <div>
             <div class="line-chart-area">
-                <BalanceChart @ref="balanceChartRef" ></BalanceChart>
+                <BalanceChart></BalanceChart>
             </div>
             <div class="column-chart-area">
                 <OrdersChart></OrdersChart>
@@ -23,61 +20,7 @@
 
 @code{
     [CascadingParameter]
-    private TradingDataService TradingDataService { get; set; }
-
-    private ResultCards cardsRef;
-    private CandleChart candleChartRef;
-    private BalanceChart balanceChartRef;
-
-    private List<StrategyTester.Models.BalanceChange> lineChartData = new List<StrategyTester.Models.BalanceChange>();
-
-
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        InitializeData();
-      
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await base.OnAfterRenderAsync(firstRender);
-            await InvokeAsync(async () =>
-            {
-                await Task.Delay(1);
-                this.UpdateChartData();
-                StateHasChanged();
-            });
-        }
-    }
-
-    private void InitializeData()
-    {
-
-    }
-
-    private void UpdateChartData()
-    {
-
-    }
-
-
-
-    private async Task OnDateRangeChange(RangePickerEventArgs<DateTime> args)
-    {
-
-    }
-
-    public void Dispose()
-    {
-
-    }
-
-
+    private TradeResultDataService TradeResultDataService { get; set; }
 }
 
 <style>
