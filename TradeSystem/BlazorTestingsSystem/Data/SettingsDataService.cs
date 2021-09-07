@@ -1,6 +1,5 @@
 ﻿using Binance.Net;
 using BlazorTestingsSystem.Strategies;
-using StrategyTester.Enums;
 using StrategyTester.Models;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using BlazorTestingsSystem.Enums;
 
 namespace BlazorTestingsSystem.Data
 {
@@ -16,17 +16,27 @@ namespace BlazorTestingsSystem.Data
         public Dictionary<string,BaseStrategy> StrategiesDict { get; set; }
         public IEnumerable<string> Symbols { get; set; }
         public IEnumerable<Interval> Intervals { get; set; }
+        public SettingsDetails SettingsDetails { get; set; }
 
-        public SettingsDataService()
+        public static async Task<SettingsDataService> CreateAsync()
         {
-            var client = new BinanceClient();
-            
-            StrategiesDict = new Dictionary<string, BaseStrategy>();
-            StrategiesDict.Add("TwoEma", new TwoEmaStrategy());
+            var service = new SettingsDataService();
+            return await service.InitializeAsync();
+        }
+        private async Task<SettingsDataService> InitializeAsync()
+        {
+            using (var client = new BinanceClient())
+            {
+                StrategiesDict = new Dictionary<string, BaseStrategy>();
+                StrategiesDict.Add("TwoEma", new TwoEmaStrategy());
 
-            Symbols = client.Spot.System.GetExchangeInfoAsync().Result.Data.Symbols.Select(s => s.Name);
+                Intervals = GetEnumDisplayNames<CandleInterval>();
 
-            Intervals = GetEnumDisplayNames<CandleInterval>();
+                //SettingsDetails = new SettingsDetails();
+                
+                Symbols = (await client.Spot.System.GetExchangeInfoAsync()).Data.Symbols.Select(s => s.Name);
+            }
+            return this;
         }
 
         private List<Interval> GetEnumDisplayNames<T>()
