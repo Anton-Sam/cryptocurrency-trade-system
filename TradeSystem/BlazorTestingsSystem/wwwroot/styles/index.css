@@ -2729,6 +2729,7 @@ input[type="search"].search::-moz-placeholder {
 }
 
 .settings-container {
+    width:100%;
     height: 100vh;
     display: flex;
     justify-content: center;
