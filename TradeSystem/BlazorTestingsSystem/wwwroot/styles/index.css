@@ -1660,19 +1660,15 @@ span.e-label {
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 }
 
-#tolincome {
+#startBalance {
     color: #4d80f3;
 }
 
-#tolexpense {
-    color: #fb6d9d;
+#finalBalance {
+    color: #FFB600;
 }
 
-#tolbalance {
-    color: #81c868;
-}
-
-#toltransaction {
+#ordersCount {
     color: #34d3eb;
 }
 
