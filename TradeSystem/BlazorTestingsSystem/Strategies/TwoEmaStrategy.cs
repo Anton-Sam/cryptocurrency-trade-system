@@ -41,7 +41,7 @@ namespace BlazorTestingsSystem.Strategies
         {
             if (order.Status == OrderStatus.Filled && order.ClientOrderId.Equals("entry"))
             {
-                DataProvider.PlaceOrder("tp", OrderSide.Sell, OrderType.Limit, order.Quantity, 1.004m * order.Price);
+                DataProvider.PlaceOrder("tp", OrderSide.Sell, OrderType.Limit, order.Quantity, 1.01m * order.Price);
             }
         }
     }
