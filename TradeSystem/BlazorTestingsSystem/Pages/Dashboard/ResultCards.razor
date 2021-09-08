@@ -2,7 +2,7 @@
     <div class="col-xs-6 col-xl-3 col-lg-3 col-md-3 col-sm-6 card-container">
         <div class="e-card card">
             <div class="e-card-content">
-                <h3 class="card-value" id="tolincome">@startBalance</h3>
+                <h3 class="card-value" id="startBalance">@startBalance</h3>
                 <span class="card-text">Start balance</span>
             </div>
         </div>
@@ -10,7 +10,7 @@
     <div class="col-xs-6 col-xl-3 col-lg-3 col-md-3 col-sm-6 card-container">
         <div class="e-card card">
             <div class="e-card-content">
-                <h3 class="card-value" id="tolexpense">@finalBalance</h3>
+                <h3 class="card-value" id="finalBalance">@finalBalance</h3>
                 <span class="card-text">Finish balance</span>
             </div>
         </div>
@@ -18,7 +18,7 @@
     <div class="col-xs-6 col-xl-3 col-lg-3 col-md-3 col-sm-6 card-container">
         <div class="e-card card">
             <div class="e-card-content">
-                <h3 class="card-value" id="tolbalance">@profit %</h3>
+                <h3 class="card-value" id=@colorId>@profit %</h3>
                 <span class="card-text">Profit</span>
             </div>
         </div>
@@ -26,17 +26,27 @@
     <div class="col-xs-6 col-xl-3 col-lg-3 col-md-3 col-sm-6 card-container">
         <div class="e-card card">
             <div class="e-card-content">
-                <h3 class="card-value" id="toltransaction">@ordersCount</h3>
+                <h3 class="card-value" id="ordersCount">@ordersCount</h3>
                 <span class="card-text">Orders count</span>
             </div>
         </div>
     </div>
 </div>
 
+<style>
+    #negativeProfit {
+        color: #BF1502;
+    }
+    #positiveProfit {
+        color: #81c868;
+    }
+</style>
+
 @code{
     [CascadingParameter]
     TradeResultDataService TradeResultDataService { get; set; }
 
+    private string colorId="";
     private double startBalance;
     private double finalBalance;
     private double profit;
@@ -48,22 +58,19 @@
         UpdateCards();
     }
 
-    /// <summary>
-    /// Calculation for card values
-    /// </summary>
-    public void RefreshCards()
-    {
-        return;
-    }
     private void UpdateCards()
     {
         if (TradeResultDataService.Balances is null || TradeResultDataService.Orders is null)
             return;
         startBalance = TradeResultDataService.Balances.First().Amount;
         finalBalance = TradeResultDataService.Balances.Last().Amount;
-        //var val = (finalBalance / startBalance - 1) * 100d;
         profit = Math.Round((finalBalance / startBalance - 1)*100,4);
         ordersCount = TradeResultDataService.Orders.Select(o=>o.Id).Distinct().Count();
+
+        if (profit > 0)
+            colorId = "positiveProfit";
+        else
+            colorId = "negativeProfit";
     }
 }
 

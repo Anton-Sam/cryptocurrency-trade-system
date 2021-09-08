@@ -1,10 +1,27 @@
 ﻿@page "/"
 
+@if (showSpinner)
+{
+    <div class="sb-content-overlay">
+        <div class="sb-loading">
+            <svg class="circular" height="40" width="40">
+                <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="6" stroke-miterlimit="10" />
+            </svg>
+        </div>
+    </div>
+    <style>
+        #main-page {
+            pointer-events: none;
+            cursor: auto;
+        }
+    </style>
+}
+
 <div class="control-section dashboard-page">
     <div>
         <ResultCards></ResultCards>
     </div>
-    <CandleChart></CandleChart>
+    <CandleChart ChartCreated="@(() => { showSpinner = false; StateHasChanged(); })"></CandleChart>
     <div>
         <div>
             <div class="line-chart-area">
@@ -21,6 +38,8 @@
 @code{
     [CascadingParameter]
     private TradeResultDataService TradeResultDataService { get; set; }
+
+    private bool showSpinner = true;
 }
 
 <style>

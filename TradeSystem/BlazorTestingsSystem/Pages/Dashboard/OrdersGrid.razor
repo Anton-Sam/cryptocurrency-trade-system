@@ -3,9 +3,6 @@
 @using Syncfusion.Blazor.TreeGrid;
 <div class="row recent-expense-grid">
     <div class="col-xs-6 col-sm-6 col-md-12" style="width:100%">
-        @*<div class="col-lg-12 control-section">
-            <div class="content-wrapper">
-                <div class="row">*@
         <SfGrid DataSource="@ordersData" AllowPaging="true" Height="400" RowHeight="25">
             <GridTemplates>
                 <ToolbarTemplate>
@@ -27,49 +24,29 @@
                 <GridColumn Field=@nameof(OrderData.CreateTime) HeaderText="Create time" Width="110"></GridColumn>
             </GridColumns>
         </SfGrid>
-        <!--</div>
-            </div>-->
         <div class="row  margin-top-10">
-                <div class="col-xs-6 col-sm-6 col-md-12" style="width:100%;height:200px">
-                    <SfGrid DataSource="@orderDetails" Query="@(new Query().Where("Id", "equal", RowIndex))" AllowPaging="true" Height="100%">
-                        <GridColumns>
-                            <GridColumn Field=@nameof(OrderDetails.Id) HeaderText="Order ID" Width="110"> </GridColumn>
-                            <GridColumn Field=@nameof(OrderDetails.Status) HeaderText="Order status" Width="110"></GridColumn>
-                            <GridColumn Field=@nameof(OrderDetails.UpdateTime) HeaderText="Update time" Width="110"></GridColumn>
-                        </GridColumns>
-                    </SfGrid>
-                </div>
+            <div class="col-xs-6 col-sm-6 col-md-12" style="width:100%;height:200px">
+                <SfGrid DataSource="@orderDetails" Query="@(new Query().Where("Id", "equal", RowIndex))" AllowPaging="true" Height="100%">
+                    <GridColumns>
+                        <GridColumn Field=@nameof(OrderDetails.Id) HeaderText="Order ID" Width="110"> </GridColumn>
+                        <GridColumn Field=@nameof(OrderDetails.Status) HeaderText="Order status" Width="110"></GridColumn>
+                        <GridColumn Field=@nameof(OrderDetails.UpdateTime) HeaderText="Update time" Width="110"></GridColumn>
+                    </GridColumns>
+                </SfGrid>
             </div>
-        <!--</div>
-        </div>-->
+        </div>
     </div>
 </div>
-
-
-<style>
-    .e-statustext,
-    .e-mastertext {
-        font-size: 15px;
-        font-family: Roboto;
-        opacity: 0.87;
-        padding: 1em;
-    }
-</style>
 @code{
-
-
-
     [CascadingParameter]
     private TradeResultDataService TradeResultDataService { get; set; }
 
     private List<OrderData> ordersData;
     private List<OrderDetails> orderDetails;
     public string RowIndex { get; set; }
-    public IEnumerable<Order> GridData { get; set; }
 
     public void RowSelecthandler(RowSelectEventArgs<OrderData> Args)
     {
-        //SelectedCustomer = Args.Data.CustomerName;
         RowIndex = Args.Data.Id;
     }
 
@@ -77,25 +54,6 @@
     {
         await base.OnInitializedAsync();
         UpdateGrid();
-    }
-
-
-
-    public class OrderData
-    {
-        public string Id { get; set; }
-        public string ClinetOrderId { get; set; }
-        public OrderSide Side { get; set; }
-        public OrderType Type { get; set; }
-        public decimal Price { get; set; }
-        public decimal Quantity { get; set; }
-        public DateTime CreateTime { get; set; }
-    }
-    public class OrderDetails
-    {
-        public string Id { get; set; }
-        public OrderStatus Status { get; set; }
-        public DateTime UpdateTime { get; set; }
     }
 
     private void UpdateGrid()
@@ -127,46 +85,22 @@
             }));
         }
     }
+
+    public class OrderData
+    {
+        public string Id { get; set; }
+        public string ClinetOrderId { get; set; }
+        public OrderSide Side { get; set; }
+        public OrderType Type { get; set; }
+        public decimal Price { get; set; }
+        public decimal Quantity { get; set; }
+        public DateTime CreateTime { get; set; }
+    }
+
+    public class OrderDetails
+    {
+        public string Id { get; set; }
+        public OrderStatus Status { get; set; }
+        public DateTime UpdateTime { get; set; }
+    }
 }
-
-
-@*<SfTreeGrid DataSource="@TreeGridData" IdMapping="TaskId" ParentIdMapping="ParentId" TreeColumnIndex="1"  RowHeight="20" Height="400" AllowPaging="true">
-        <TreeGridColumns>
-            <TreeGridColumn Field="TaskId" HeaderText="Task ID" Width="100" TextAlign="TextAlign.Right"></TreeGridColumn>
-            <TreeGridColumn Field="TaskName" HeaderText="Task Name" Width="220" IsFrozen="true"></TreeGridColumn>
-            <TreeGridColumn Field="Duration" HeaderText="Duration" Width="180" TextAlign="TextAlign.Right" IsFrozen="true"></TreeGridColumn>
-            <TreeGridColumn Field="Progress" HeaderText="Progress" Width="180"></TreeGridColumn>
-            <TreeGridColumn Field="Priority" HeaderText="Priority" Width="180"></TreeGridColumn>
-        </TreeGridColumns>
-    </SfTreeGrid>
-
-    @code{
-        public List<BusinessObject> TreeGridData { get; set; }
-        protected override void OnInitialized()
-        {
-            this.TreeGridData = new List<BusinessObject>();
-            for (var i=0;i<30;i++)
-            {
-                TreeGridData.Add(new BusinessObject
-                {
-                    TaskId = i.ToString(),
-                    TaskName = "Task" + i,
-                    Duration = 10,
-                    Progress = "runing",
-                    Priority = "high"
-                });
-            }
-        }
-
-        public class BusinessObject
-        {
-            public string TaskId { get; set; }
-            public string TaskName { get; set; }
-            public int Duration { get; set; }
-            public string Progress { get; set; }
-            public string Priority { get; set; }
-        }
-    }*@
-
-
-
