@@ -21,7 +21,7 @@
     <div>
         <ResultCards></ResultCards>
     </div>
-    <CandleChart ChartCreated="@(() => { showSpinner = false; StateHasChanged(); })"></CandleChart>
+    <CandleChart ChartLoaded="@(args => { showSpinner = false; StateHasChanged(); })"></CandleChart>
     <div>
         <div>
             <div class="line-chart-area">

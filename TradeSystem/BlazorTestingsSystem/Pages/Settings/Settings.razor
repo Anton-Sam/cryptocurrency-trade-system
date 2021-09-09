@@ -1,7 +1,8 @@
 ﻿@page "/settings"
 @using AutoMapper;
-@using BlazorTestingsSystem.Enums 
+@using BlazorTestingsSystem.Enums
 @inject IMapper Mapper;
+
 <style>
     #main-page {
         overflow-x: hidden;
@@ -45,9 +46,27 @@
         overflow-x: hidden;
     }
 </style>
+
+@if (showSpinner)
+{
+    <div class="sb-content-overlay">
+        <div class="sb-loading">
+            <svg class="circular" height="40" width="40">
+                <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="6" stroke-miterlimit="10" />
+            </svg>
+        </div>
+    </div>
+    <style>
+        #main-page {
+            pointer-events: none;
+            cursor: auto;
+        }
+    </style>
+}
+
 <div class="settings-container">
     <div class="col-xs-12 col-sm-6 col-lg-3 col-md-6 margin-top settings-tb-container pane">
-        <EditForm Model="@settingsDetails" OnValidSubmit="@StartTest">
+        <EditForm Model="@settingsDetails" OnValidSubmit="@StartTestAsync">
             <DataAnnotationsValidator />
             <div class="form-row">
                 <SfDropDownList Placeholder="Strategy" TValue="string" TItem="string" @bind-Value="@settingsDetails.StrategyName" DataSource="@SettingsDataService.StrategiesDict.Keys" FloatLabelType="FloatLabelType.Auto">
@@ -77,7 +96,7 @@
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary bt-container">Start</button>
             </div>
         </EditForm>
     </div>
@@ -90,24 +109,24 @@
     [CascadingParameter]
     TradeResultDataService TradeResultDataService { get; set; }
 
-    SettingsDetails settingsDetails=new SettingsDetails();
+    private bool showSpinner;
 
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    await base.OnInitializedAsync();
-    //}
+    SettingsDetails settingsDetails = new SettingsDetails();
 
-    public void StartTest()
+    public async void StartTestAsync()
     {
+        showSpinner = true;
         var strategy = SettingsDataService.StrategiesDict[settingsDetails.StrategyName];
         var symbol = settingsDetails.Symbol;
         var candleInterval = (StrategyTester.Enums.CandleInterval)Enum.Parse(typeof(StrategyTester.Enums.CandleInterval), settingsDetails.CandleInterval.Value.ToString());
         var historyRange = settingsDetails.HistoryRange.Value;
         var startBalance = (decimal)settingsDetails.StartBalance.Value;
-        var result = strategy.StartTest(symbol, candleInterval, historyRange, startBalance);
+        var result = await strategy.StartTestAsync(symbol, candleInterval, historyRange, startBalance);
         TradeResultDataService.Candles = Mapper.Map<IEnumerable<Candle>>(result.HistoryData);
         TradeResultDataService.Balances = Mapper.Map<IEnumerable<Balance>>(result.BalanceChanges);
         TradeResultDataService.Orders = Mapper.Map<IEnumerable<Order>>(result.OrdersHistory);
+        showSpinner = false;
+        StateHasChanged();
     }
 }
 

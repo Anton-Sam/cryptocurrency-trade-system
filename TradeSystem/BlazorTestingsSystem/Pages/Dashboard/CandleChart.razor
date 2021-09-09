@@ -7,7 +7,7 @@
                         <ChartArea>
                             <ChartAreaBorder Width="0"></ChartAreaBorder>
                         </ChartArea>
-                        <ChartEvents Loaded="@(()=>ChartCreated?.Invoke())"></ChartEvents>
+                        <ChartEvents Loaded="@(args=>ChartLoaded?.Invoke(args))"></ChartEvents>
                         <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.DateTime">
                             <ChartAxisCrosshairTooltip Enable="true"></ChartAxisCrosshairTooltip>
                             <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
@@ -51,7 +51,7 @@
     TradeResultDataService TradeResultDataService { get; set; }
 
     [Parameter]
-    public System.Action ChartCreated { get; set; }
+    public System.Action<LoadedEventArgs> ChartLoaded { get; set; }
 
     private IEnumerable<Candle> candles;
 
