@@ -26,9 +26,11 @@ namespace StrategyTester.Models
             VirtualExchange.OnOrderStatusChanged += OnOrderStatusChanged;
             VirtualExchange.InitializeExchange(symbol, candleInterval, historyRange, startBalance);
             return VirtualExchange.StartTrading();
+        }
 
-            //For Debug
-            
+        public async Task<TestingResult> StartTestAsync(string symbol, CandleInterval candleInterval, int historyRange, decimal startBalance)
+        {
+            return await Task.Run(() => StartTest(symbol, candleInterval, historyRange, startBalance));
         }
     }
 }
