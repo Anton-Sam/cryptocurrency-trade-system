@@ -1,5 +1,4 @@
 ﻿using StrategyTester.Enums;
-using StrategyTester.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

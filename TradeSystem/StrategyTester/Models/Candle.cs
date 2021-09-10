@@ -1,5 +1,4 @@
 ﻿using Skender.Stock.Indicators;
-using StrategyTester.Interfaces;
 using System;
 
 namespace StrategyTester.Models

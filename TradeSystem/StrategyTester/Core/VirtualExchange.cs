@@ -1,7 +1,6 @@
 ﻿using Binance.Net;
 using StrategyTester.Enums;
 using StrategyTester.Extensions;
-using StrategyTester.Interfaces;
 using StrategyTester.Models;
 using StrategyTester.Models.Test;
 using System;
