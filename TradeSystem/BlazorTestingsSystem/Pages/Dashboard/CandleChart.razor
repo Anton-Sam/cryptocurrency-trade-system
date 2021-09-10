@@ -3,7 +3,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="pane col-xs-12 col-sm-12 col-md-12 pie-container">
                 <div class="candleChart">
-                    <SfChart Title="AAPL Historical">
+                    <SfChart Title="@symbol">
                         <ChartArea>
                             <ChartAreaBorder Width="0"></ChartAreaBorder>
                         </ChartArea>
@@ -35,7 +35,7 @@
                         <ChartSeriesCollection>
                             <ChartSeries Type="ChartSeriesType.Column" DataSource="@candles" Name="Volume" XName="Date" YName="Volume">
                             </ChartSeries>
-                            <ChartSeries DataSource="@candles" YAxisName="secondary" Name="Apple Inc" XName="Date" High="High" Volume="Volume" Low="Low" Open="Open" Close="Close"
+                            <ChartSeries DataSource="@candles" YAxisName="secondary" Name="@symbol" XName="Date" High="High" Volume="Volume" Low="Low" Open="Open" Close="Close"
                                          BearFillColor="#2ecd71" BullFillColor="#e74c3d" Type="ChartSeriesType.Candle">
                             </ChartSeries>
                         </ChartSeriesCollection>
@@ -54,10 +54,14 @@
     public System.Action<LoadedEventArgs> ChartLoaded { get; set; }
 
     private IEnumerable<Candle> candles;
+    private string symbol;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        symbol = TradeResultDataService.Symbol;
         candles = TradeResultDataService.Candles;
+        if (symbol is null)
+            symbol = string.Empty;
     }
 }

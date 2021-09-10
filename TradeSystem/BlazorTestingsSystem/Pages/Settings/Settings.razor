@@ -1,7 +1,11 @@
 ﻿@page "/settings"
-@using AutoMapper;
+@using StrategyTester
+@using StrategyTester.Models.Test
+@using AutoMapper
 @using BlazorTestingsSystem.Enums
+@using Microsoft.Extensions.Logging;
 @inject IMapper Mapper;
+@inject ILogger<Settings> logger;
 
 <style>
     #main-page {
@@ -115,13 +119,26 @@
 
     public async void StartTestAsync()
     {
+        logger.Log
         showSpinner = true;
+
+        var traderClient = new TradeClient();
+
         var strategy = SettingsDataService.StrategiesDict[settingsDetails.StrategyName];
         var symbol = settingsDetails.Symbol;
         var candleInterval = (StrategyTester.Enums.CandleInterval)Enum.Parse(typeof(StrategyTester.Enums.CandleInterval), settingsDetails.CandleInterval.Value.ToString());
         var historyRange = settingsDetails.HistoryRange.Value;
         var startBalance = (decimal)settingsDetails.StartBalance.Value;
-        var result = await strategy.StartTestAsync(symbol, candleInterval, historyRange, startBalance);
+
+        var result = await traderClient.StartTestAsync(strategy,
+            new TestingSettings
+            {
+                Symbol = symbol,
+                CandleInterval = candleInterval,
+                HitoryRange = historyRange,
+                StartBalance = startBalance
+            });
+        TradeResultDataService.Symbol = symbol;
         TradeResultDataService.Candles = Mapper.Map<IEnumerable<Candle>>(result.HistoryData);
         TradeResultDataService.Balances = Mapper.Map<IEnumerable<Balance>>(result.BalanceChanges);
         TradeResultDataService.Orders = Mapper.Map<IEnumerable<Order>>(result.OrdersHistory);

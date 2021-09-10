@@ -1,19 +1,19 @@
 ﻿using Binance.Net;
+using BlazorTestingsSystem.Enums;
 using BlazorTestingsSystem.Strategies;
-using StrategyTester.Models;
+using StrategyTester.Models.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using BlazorTestingsSystem.Enums;
 
 namespace BlazorTestingsSystem.Data
 {
     public class SettingsDataService
     {
-        public Dictionary<string,BaseStrategy> StrategiesDict { get; set; }
+        public Dictionary<string, BaseStrategy> StrategiesDict { get; set; }
         public IEnumerable<string> Symbols { get; set; }
         public IEnumerable<Interval> Intervals { get; set; }
         public SettingsDetails SettingsDetails { get; set; }
@@ -33,7 +33,7 @@ namespace BlazorTestingsSystem.Data
                 Intervals = GetEnumDisplayNames<CandleInterval>();
 
                 //SettingsDetails = new SettingsDetails();
-                
+
                 Symbols = (await client.Spot.System.GetExchangeInfoAsync()).Data.Symbols.Select(s => s.Name);
             }
             return this;

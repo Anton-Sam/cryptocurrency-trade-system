@@ -41,10 +41,6 @@
 <div id="overlay" class="@OverlayClass" @onclick="CloseSidebar"></div>
 
 @code {
-    [CascadingParameter]
-    private TradingDataService ExpenseDataService { get; set; }
-    //[Inject]
-    //public SettingsDataService SettingsDataService { get; set; }
     [Parameter]
     public System.Action OnSidebarCreate { get; set; }
     private SfSidebar Sidebar;
@@ -53,7 +49,6 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        //ExpenseDataService.OnChange += StateHasChanged;
     }
     private async Task OpenSidebar()
     {
@@ -65,8 +60,6 @@
     }
     private async Task CloseSidebar()
     {
-
-        //SettingsDataService.HistoryRange += 100;
         if (Sidebar.IsOpen)
         {
             await this.Sidebar.Hide();

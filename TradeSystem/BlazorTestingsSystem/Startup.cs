@@ -1,24 +1,19 @@
-using BlazorTestingsSystem.DataServices;
-using BlazorTestingsSystem.Strategies;
+using BlazorTestingsSystem.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using StrategyTester.Models;
+using Microsoft.Extensions.Logging;
 using Syncfusion.Blazor;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+using System.IO;
 
 namespace BlazorTestingsSystem
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration,IWebHostEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
             _env = env;
@@ -52,8 +47,11 @@ namespace BlazorTestingsSystem
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "log.txt"));
+            var logger = loggerFactory.CreateLogger("FileLogger");
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
