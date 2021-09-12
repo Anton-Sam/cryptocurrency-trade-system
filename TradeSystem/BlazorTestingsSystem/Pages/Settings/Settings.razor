@@ -119,10 +119,9 @@
 
     public async void StartTestAsync()
     {
-        logger.Log
         showSpinner = true;
 
-        var traderClient = new TradeClient();
+        var traderClient = new TradeClient(logger);
 
         var strategy = SettingsDataService.StrategiesDict[settingsDetails.StrategyName];
         var symbol = settingsDetails.Symbol;
