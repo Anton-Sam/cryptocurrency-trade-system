@@ -1,14 +1,16 @@
 ﻿using Skender.Stock.Indicators;
 using StrategyTester.Enums;
 using StrategyTester.Models;
-using StrategyTester.Models.Common;
+using StrategyTester.Models.Interfaces;
 using System.Linq;
 
 namespace BlazorTestingsSystem.Strategies
 {
-    public class TwoEmaStrategy : BaseStrategy
+    public class TwoEmaStrategy : IStrategy
     {
-        public override void OnCandleClosed(Candle candle)
+        public IDataProvider DataProvider { get; set; }
+
+        public void OnCandleClosed(Candle candle)
         {
             var lastCandles = DataProvider.GetLastCandles(265);
             if (lastCandles is null)
@@ -27,15 +29,13 @@ namespace BlazorTestingsSystem.Strategies
                 }
             }
 
-
             if (ema9.First().Ema < ema15.First().Ema && ema9.Last().Ema > ema15.Last().Ema)
             {
                 DataProvider.PlaceOrder("entry", OrderSide.Buy, OrderType.Market, 1);
             }
-
         }
 
-        public override void OnOrderStatusChanged(Order order)
+        public void OnOrderStatusChanged(Order order)
         {
             if (order.Status == OrderStatus.Filled && order.ClientOrderId.Equals("entry"))
             {
