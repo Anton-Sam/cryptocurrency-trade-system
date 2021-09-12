@@ -1,19 +1,19 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 namespace BlazorTestingsSystem.Logging
 {
     public class FileLogger : ILogger
     {
-        //private string filePath;
-        private int fileCounter = 1;
-        private string filePath;
-        private int maxByteSize = 30000;
+        private readonly FileLoggerProvider _fileLoggerProvider;
+        private int _fileCounter = 1;
         private static object _lock = new object();
-        public FileLogger()
+        public FileLogger(FileLoggerProvider fileLoggerProvider)
         {
-
+            _fileLoggerProvider = fileLoggerProvider;
         }
         public IDisposable BeginScope<TState>(TState state)
         {
@@ -22,30 +22,45 @@ namespace BlazorTestingsSystem.Logging
 
         public bool IsEnabled(LogLevel logLevel)
         {
-            return true;
+            return logLevel != LogLevel.None;
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            filePath = $"log {DateTime.Now.ToString("yyyyMMdd")}_{fileCounter}.txt";
+            if (!IsEnabled(logLevel))
+                return;
 
-            var fi = new FileInfo(filePath);
-            if (fi.Exists)
+            var fileName = GenetateFileName();
+
+            var fi = new FileInfo(fileName);
+            if (fi.Exists && fi.Length > _fileLoggerProvider.Options.MaxByteSize)
             {
-                if (fi.Length > maxByteSize)
-                {
-                    fileCounter++;
-                }
+                _fileCounter++;
+                fileName = GenetateFileName();
             }
 
-            filePath = $"log {DateTime.Now.ToString("yyyyMMdd")}_{fileCounter}.txt";
-            if (formatter != null)
+            fileName = Path.Combine(_fileLoggerProvider.Options.FolderPath, _fileLoggerProvider.Options.FilePath
+                .Replace("[timestamp]", DateTime.Now.ToString("yyyyMMdd"))
+                .Replace("[counter]", _fileCounter.ToString()));
+
+            var threadId = Thread.CurrentThread.ManagedThreadId;
+            var logRecord = string.Format("[{0}] [{1}] [{2}] - {3}", DateTime.Now.ToString("[yyyy.MM.dd HH:mm]"), logLevel.ToString(), threadId, formatter(state, exception));
+            
+            lock (_lock)
             {
-                lock (_lock)
+                using (var sw = new StreamWriter(fileName, true, System.Text.Encoding.UTF8))
                 {
-                    File.AppendAllText(filePath, formatter(state, exception) + Environment.NewLine);
+                    sw.WriteLine(logRecord);
                 }
             }
+        }
+
+        private string GenetateFileName()
+        {
+            return Path.Combine(_fileLoggerProvider.Options.FolderPath, _fileLoggerProvider.Options.FilePath
+                   .Replace("[timestamp]", DateTime.Now.ToString("yyyyMMdd"))
+                   .Replace("[counter]", _fileCounter.ToString()));
+
         }
     }
 }
