@@ -1,15 +1,14 @@
 ﻿using Binance.Net;
-using StrategyTester.Core;
+using Microsoft.Extensions.Logging;
 using StrategyTester.Enums;
 using StrategyTester.Extensions;
 using StrategyTester.Models;
-using StrategyTester.Models.Common;
+using StrategyTester.Models.Interfaces;
 using StrategyTester.Models.Test;
+using StrategyTester.Test;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StrategyTester.DataProviders
 {
@@ -20,6 +19,8 @@ namespace StrategyTester.DataProviders
 
         private static BinanceClient _client;
         private static ExchangeState _state;
+
+        public ILogger Logger { get; set; }
 
         private void InitializeData(TestingSettings settings)
         {
@@ -38,7 +39,12 @@ namespace StrategyTester.DataProviders
         private void InitSymbolInfo()
         {
             var binanceSymbolInfo = _client.Spot.System.GetExchangeInfoAsync().Result.Data.Symbols
-                .FirstOrDefault(s => s.Name.Equals(_state.TestingSettings.Symbol)) ?? throw new ArgumentException("Inccorect symbol");
+                .FirstOrDefault(s => s.Name.Equals(_state.TestingSettings.Symbol));
+            if (binanceSymbolInfo is null)
+            {
+                Logger.LogError("Symbols info is null. Incorrect symbol.");
+                throw new ArgumentNullException("Symbols info is null. Incorrect symbol.");
+            }
             _state.SymbolInfo = new SymbolInfo
             {
                 Name = binanceSymbolInfo.Name,
@@ -52,7 +58,12 @@ namespace StrategyTester.DataProviders
             var binanceCandles = _client.Spot.Market.GetKlinesAsync(
                 _state.TestingSettings.Symbol,
                 _state.TestingSettings.CandleInterval.ToBinanceKlineInterval(),
-                limit: _state.TestingSettings.HitoryRange).Result.Data ?? throw new NullReferenceException("Incorrect hitory params. History data can't be null");
+                limit: _state.TestingSettings.HitoryRange).Result.Data;
+            if (binanceCandles is null)
+            {
+                Logger.LogError("Incorrect hitory params. History data can't be null");
+                throw new NullReferenceException("Incorrect hitory params. History data can't be null");
+            }
 
             _state.HistoryCandles = binanceCandles.Select(bin => new Candle
             {
@@ -76,6 +87,7 @@ namespace StrategyTester.DataProviders
 
         internal TestingResult StartTrading(TestingSettings settings)
         {
+            Logger.LogInformation("Testing is started");
             InitializeData(settings);
             var result = new TestingResult();
             foreach (var candle in _state.HistoryCandles)
@@ -144,8 +156,10 @@ namespace StrategyTester.DataProviders
         public Order PlaceOrder(string clientOrderId, OrderSide side, OrderType type, decimal quantity, decimal? price = null)
         {
             if (!price.HasValue && type != OrderType.Market)
+            {
+                Logger.LogError("Price can be null only with market order");
                 throw new ArgumentException("Price can be null only with market order");
-
+            }
             var order = new Order
             {
                 Id = _state.OrderId.ToString(),
@@ -176,24 +190,30 @@ namespace StrategyTester.DataProviders
             return order;
         }
 
-        private static void AddCurrencyToOrder(Balance balance, decimal requiredQuantity)
+        private void AddCurrencyToOrder(Balance balance, decimal requiredQuantity)
         {
             if (balance.Free < requiredQuantity)
-                throw new ArgumentException("Not enough balance");
+            {
+                Logger.LogInformation("Not enough balance.");
+                throw new ArgumentException("Not enough balance.");
+            }
             balance.Free -= requiredQuantity;
             balance.Locked += requiredQuantity;
         }
 
-        private static void ReturnCurrencyFromOrder(Balance balance, decimal quantity)
+        private void ReturnCurrencyFromOrder(Balance balance, decimal quantity)
         {
             balance.Free += quantity;
             balance.Locked -= quantity;
         }
 
-        public Order CancelOrder(string orderId=null,string clientOrderId=null)
+        public Order CancelOrder(string orderId = null, string clientOrderId = null)
         {
             if (string.IsNullOrEmpty(orderId) && string.IsNullOrEmpty(clientOrderId))
+            {
+                Logger.LogError("Either orderId or origClientOrderId must be sent");
                 throw new ArgumentException("Either orderId or origClientOrderId must be sent");
+            }
 
             var order = (Order)_state.OpenOrders.FirstOrDefault(ord => ord.Id.Equals(orderId)).Clone();
             if (order is null)
@@ -230,7 +250,12 @@ namespace StrategyTester.DataProviders
 
         public IEnumerable<Candle> GetLastCandles(int count)
         {
-            var candles = _state.HistoryCandles?.Where(c => c.Date <= _state.LastCandle.Date).TakeLast(count) ?? throw new NullReferenceException("History not exist");
+            var candles = _state.HistoryCandles?.Where(c => c.Date <= _state.LastCandle.Date).TakeLast(count);
+            if (candles is null)
+            {
+                Logger.LogError("History is not exits.");
+                throw new NullReferenceException("History is not exits.");
+            }
             if (candles.Count() < count)
                 return null;
             return candles;
