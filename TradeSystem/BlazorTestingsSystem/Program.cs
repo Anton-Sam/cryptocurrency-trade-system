@@ -19,10 +19,18 @@ namespace BlazorTestingsSystem
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
+
             Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
+            })
+            .ConfigureLogging((hostBuilderContext, logging) =>
+            {
+                logging.AddFileLogger(options =>
+                {
+                    hostBuilderContext.Configuration.GetSection("Logging").GetSection("FileLogger").GetSection("Options").Bind(options);
+                });
             });
     }
 }

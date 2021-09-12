@@ -22,8 +22,6 @@ namespace BlazorTestingsSystem
         public IConfiguration Configuration { get; }
         private readonly IWebHostEnvironment _env;
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR(e =>
@@ -43,15 +41,10 @@ namespace BlazorTestingsSystem
                 }
             });
             services.AddSyncfusionBlazor();
-            //services.AddSingleton(ConfigureStrategies());
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "log.txt"));
-            var logger = loggerFactory.CreateLogger("FileLogger");
-            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -59,7 +52,6 @@ namespace BlazorTestingsSystem
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -74,14 +66,5 @@ namespace BlazorTestingsSystem
                 endpoints.MapFallbackToPage("/_Host");
             });
         }
-
-        //private static SettingsDataService ConfigureStrategies()
-        //{
-        //    //var client = new BinanceClient();
-        //    var settings = new SettingsDataService();
-        //    settings.StrategiesDict = new Dictionary<string, BaseStrategy>();
-        //    settings.StrategiesDict.Add("TwoEma", new TwoEmaStrategy());
-        //    return settings;
-        //}
     }
 }
