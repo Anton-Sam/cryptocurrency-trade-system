@@ -360,14 +360,14 @@ html body > .content {
     #expense-grid-wrapper .e-gridcontent colgroup col:nth-child(5),
     #expense-grid-wrapper .e-headercontent .e-columnheader .e-headercell:nth-child(5),
     #expense-grid-wrapper .e-headercontent colgroup col:nth-child(5),
-    .recent-expense-grid .e-gridcontent .e-row .e-rowcell:nth-child(1),
-    .recent-expense-grid .e-gridcontent colgroup col:nth-child(1),
-    .recent-expense-grid .e-headercontent .e-columnheader .e-headercell:nth-child(1),
-    .recent-expense-grid .e-headercontent colgroup col:nth-child(1),
-    .recent-expense-grid .e-gridcontent .e-row .e-rowcell:nth-child(4),
-    .recent-expense-grid .e-gridcontent colgroup col:nth-child(4),
-    .recent-expense-grid .e-headercontent .e-columnheader .e-headercell:nth-child(4),
-    .recent-expense-grid .e-headercontent colgroup col:nth-child(4) {
+    .orders-grid .e-gridcontent .e-row .e-rowcell:nth-child(1),
+    .orders-grid .e-gridcontent colgroup col:nth-child(1),
+    .orders-grid .e-headercontent .e-columnheader .e-headercell:nth-child(1),
+    .orders-grid .e-headercontent colgroup col:nth-child(1),
+    .orders-grid .e-gridcontent .e-row .e-rowcell:nth-child(4),
+    .orders-grid .e-gridcontent colgroup col:nth-child(4),
+    .orders-grid .e-headercontent .e-columnheader .e-headercell:nth-child(4),
+    .orders-grid .e-headercontent colgroup col:nth-child(4) {
         display: none;
     }
 }
@@ -377,10 +377,10 @@ html body > .content {
     #expense-grid-wrapper .e-gridcontent colgroup col:nth-child(4),
     #expense-grid-wrapper .e-headercontent .e-columnheader .e-headercell:nth-child(4),
     #expense-grid-wrapper .e-headercontent colgroup col:nth-child(4),
-    .recent-expense-grid .e-gridcontent .e-row .e-rowcell:nth-child(3),
-    .recent-expense-grid .e-gridcontent colgroup col:nth-child(3),
-    .recent-expense-grid .e-headercontent .e-columnheader .e-headercell:nth-child(3),
-    .recent-expense-grid .e-headercontent colgroup col:nth-child(3) {
+    .orders-grid .e-gridcontent .e-row .e-rowcell:nth-child(3),
+    .orders-grid .e-gridcontent colgroup col:nth-child(3),
+    .orders-grid .e-headercontent .e-columnheader .e-headercell:nth-child(3),
+    .orders-grid .e-headercontent colgroup col:nth-child(3) {
         display: none;
     }
 }
@@ -399,7 +399,7 @@ html body > .content {
         padding-bottom: 0;
     }
 
-    .pie-chart,
+    .candle-chart,
     .column-chart,
     .line-chart {
         margin-bottom: 16px;
@@ -440,7 +440,7 @@ html body > .content {
         margin-top: 7rem;
     }
 
-    .pie-chart,
+    .candle-chart,
     .column-chart,
     .line-chart {
         margin-bottom: 16px;
@@ -711,16 +711,16 @@ html body > .content {
     background: #fff;
 }
 
-.recent-expense-grid .e-grid .e-toolbar {
+.orders-grid .e-grid .e-toolbar {
     background: #fff;
     border: none;
 }
 
-.recent-expense-grid .e-grid {
+.orders-grid .e-grid {
     min-height: 320px;
 }
 
-    .recent-expense-grid .e-grid .e-toolbar .e-toolbar-items:not(.e-tbar-pos) .e-toolbar-item:first-child {
+    .orders-grid .e-grid .e-toolbar .e-toolbar-items:not(.e-tbar-pos) .e-toolbar-item:first-child {
         margin-left: 15px;
     }
 
@@ -851,8 +851,8 @@ html body > .content {
     z-index: 9000;
 }
 
-.recent-expense-grid .sf-grid .e-toolbar-item,
-.recent-expense-grid .sf-grid .e-tbar-btn {
+.orders-grid .sf-grid .e-toolbar-item,
+.orders-grid .sf-grid .e-tbar-btn {
     cursor: auto;
 }
 
@@ -1465,7 +1465,7 @@ span.e-label {
 }
 
 @media (max-width: 938px) {
-    #totalExpense .candleChart {
+    .candleChart {
         height: 355px;
     }
 }
@@ -2066,7 +2066,7 @@ input[type="search"].search::-moz-placeholder {
         border-top-left-radius: 6px;
     }
 
-.recent-expense-grid .e-grid .e-content:last-child {
+.orders-grid .e-grid .e-content:last-child {
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
 }
@@ -2335,13 +2335,13 @@ input[type="search"].search::-moz-placeholder {
     height: 32px;
 }
 
-.recent-expense-grid .e-grid tr.e-emptyrow,
+.orders-grid .e-grid tr.e-emptyrow,
 .exp-content-container .e-grid tr.e-emptyrow {
     height: 200px;
 }
 
     .exp-content-container .e-grid tr.e-emptyrow td,
-    .recent-expense-grid .e-grid tr.e-emptyrow td {
+    .orders-grid .e-grid tr.e-emptyrow td {
         color: transparent;
         background-image: url(./images/no-records.png);
         background-repeat: no-repeat;
@@ -2561,7 +2561,7 @@ input[type="search"].search::-moz-placeholder {
     padding: 0 20px;
 }
 
-.recent-expense-grid .e-grid tr, .exp-content-container .e-grid tr {
+.orders-grid .e-grid tr, .exp-content-container .e-grid tr {
     cursor: pointer;
 }
 
