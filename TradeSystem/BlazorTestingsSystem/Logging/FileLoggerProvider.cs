@@ -27,7 +27,6 @@ namespace BlazorTestingsSystem.Logging
         }
 
         public void Dispose()
-        {
-        }
+        {}
     }
 }

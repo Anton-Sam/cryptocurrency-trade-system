@@ -39,10 +39,6 @@ namespace BlazorTestingsSystem.Logging
                 fileName = GenetateFileName();
             }
 
-            fileName = Path.Combine(_fileLoggerProvider.Options.FolderPath, _fileLoggerProvider.Options.FilePath
-                .Replace("[timestamp]", DateTime.Now.ToString("yyyyMMdd"))
-                .Replace("[counter]", _fileCounter.ToString()));
-
             var threadId = Thread.CurrentThread.ManagedThreadId;
             var logRecord = string.Format("[{0}] [{1}] [{2}] - {3}", DateTime.Now.ToString("[yyyy.MM.dd HH:mm]"), logLevel.ToString(), threadId, formatter(state, exception));
             
