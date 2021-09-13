@@ -35,7 +35,7 @@ namespace BlazorTestingsSystem
 
             services.AddServerSideBlazor().AddCircuitOptions(o =>
             {
-                if (_env.IsDevelopment()) //only add details when debugging
+                if (_env.IsDevelopment())
                 {
                     o.DetailedErrors = true;
                 }
