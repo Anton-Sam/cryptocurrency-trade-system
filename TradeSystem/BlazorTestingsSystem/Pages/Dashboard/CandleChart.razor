@@ -1,50 +1,49 @@
-﻿<div class="pie-chart-container">
-    <div class="row pie-chart" id="totalexpense">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="pane col-xs-12 col-sm-12 col-md-12 pie-container">
-                <div class="candleChart">
-                    <SfChart Title="@symbol">
-                        <ChartArea>
-                            <ChartAreaBorder Width="0"></ChartAreaBorder>
-                        </ChartArea>
-                        <ChartEvents Loaded="@(args=>ChartLoaded?.Invoke(args))"></ChartEvents>
-                        <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.DateTime">
-                            <ChartAxisCrosshairTooltip Enable="true"></ChartAxisCrosshairTooltip>
-                            <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
-                        </ChartPrimaryXAxis>
-                        <ChartPrimaryYAxis Title="Volume" ValueType="Syncfusion.Blazor.Charts.ValueType.Logarithmic" OpposedPosition="true" Interval="20" LabelFormat="n0">
+﻿<div class="row candle-chart">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="pane col-xs-12 col-sm-12 col-md-12 chart-container">
+            <div class="candleChart">
+                <SfChart Title="@symbol">
+                    <ChartArea>
+                        <ChartAreaBorder Width="0"></ChartAreaBorder>
+                    </ChartArea>
+                    <ChartEvents Loaded="@(args=>ChartLoaded?.Invoke(args))"></ChartEvents>
+                    <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.DateTime">
+                        <ChartAxisCrosshairTooltip Enable="true"></ChartAxisCrosshairTooltip>
+                        <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
+                    </ChartPrimaryXAxis>
+                    <ChartPrimaryYAxis Title="Volume" ValueType="Syncfusion.Blazor.Charts.ValueType.Logarithmic" OpposedPosition="true" Interval="20" LabelFormat="n0">
+                        <ChartAxisLineStyle Width="0"></ChartAxisLineStyle>
+                        <ChartAxisMajorGridLines Width="1"></ChartAxisMajorGridLines>
+                        <ChartAxisMajorTickLines Width="0"></ChartAxisMajorTickLines>
+                    </ChartPrimaryYAxis>
+                    <ChartAxes>
+                        <ChartAxis Name="secondary" OpposedPosition="true" RowIndex="1" LabelFormat="n6" Title="Price" RangePadding="ChartRangePadding.Additional" PlotOffset="30">
                             <ChartAxisLineStyle Width="0"></ChartAxisLineStyle>
                             <ChartAxisMajorGridLines Width="1"></ChartAxisMajorGridLines>
-                            <ChartAxisMajorTickLines Width="0"></ChartAxisMajorTickLines>
-                        </ChartPrimaryYAxis>
-                        <ChartAxes>
-                            <ChartAxis Name="secondary" OpposedPosition="true" RowIndex="1" LabelFormat="n6" Title="Price" RangePadding="ChartRangePadding.Additional" PlotOffset="30">
-                                <ChartAxisLineStyle Width="0"></ChartAxisLineStyle>
-                                <ChartAxisMajorGridLines Width="1"></ChartAxisMajorGridLines>
-                            </ChartAxis>
-                        </ChartAxes>
-                        <ChartRows>
-                            <ChartRow Height="30%"></ChartRow>
-                            <ChartRow Height="70%"></ChartRow>
-                        </ChartRows>
-                        <ChartLegendSettings Visible="false"></ChartLegendSettings>
-                        <ChartTooltipSettings Enable="true" Shared="true"></ChartTooltipSettings>
-                        <ChartCrosshairSettings Enable="true" LineType="LineType.Vertical">
-                            <ChartCrosshairLine Width="1"></ChartCrosshairLine>
-                        </ChartCrosshairSettings>
-                        <ChartSeriesCollection>
-                            <ChartSeries Type="ChartSeriesType.Column" DataSource="@candles" Name="Volume" XName="Date" YName="Volume">
-                            </ChartSeries>
-                            <ChartSeries DataSource="@candles" YAxisName="secondary" Name="@symbol" XName="Date" High="High" Volume="Volume" Low="Low" Open="Open" Close="Close"
-                                         BearFillColor="#2ecd71" BullFillColor="#e74c3d" Type="ChartSeriesType.Candle">
-                            </ChartSeries>
-                        </ChartSeriesCollection>
-                    </SfChart>
-                </div>
+                        </ChartAxis>
+                    </ChartAxes>
+                    <ChartRows>
+                        <ChartRow Height="30%"></ChartRow>
+                        <ChartRow Height="70%"></ChartRow>
+                    </ChartRows>
+                    <ChartLegendSettings Visible="false"></ChartLegendSettings>
+                    <ChartTooltipSettings Enable="true" Shared="true"></ChartTooltipSettings>
+                    <ChartCrosshairSettings Enable="true" LineType="LineType.Vertical">
+                        <ChartCrosshairLine Width="1"></ChartCrosshairLine>
+                    </ChartCrosshairSettings>
+                    <ChartSeriesCollection>
+                        <ChartSeries Type="ChartSeriesType.Column" DataSource="@candles" Name="Volume" XName="Date" YName="Volume">
+                        </ChartSeries>
+                        <ChartSeries DataSource="@candles" YAxisName="secondary" Name="@symbol" XName="Date" High="High" Volume="Volume" Low="Low" Open="Open" Close="Close"
+                                     BearFillColor="#2ecd71" BullFillColor="#e74c3d" Type="ChartSeriesType.Candle">
+                        </ChartSeries>
+                    </ChartSeriesCollection>
+                </SfChart>
             </div>
         </div>
     </div>
 </div>
+
 
 @code{
     [CascadingParameter]
@@ -59,6 +58,11 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        UpdateChart();
+    }
+
+    private void UpdateChart()
+    {
         symbol = TradeResultDataService.Symbol;
         candles = TradeResultDataService.Candles;
         if (symbol is null)
