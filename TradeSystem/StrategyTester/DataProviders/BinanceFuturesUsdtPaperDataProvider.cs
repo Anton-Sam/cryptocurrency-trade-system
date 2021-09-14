@@ -9,10 +9,12 @@ using StrategyTester.Test;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace StrategyTester.DataProviders
 {
-    class PaperDataProvider : IDataProvider
+    public class BinanceFuturesUsdtPaperDataProvider : IDataProvider
     {
         public event Action<Order> OnOrderStatusChanged;
         public event Action<Candle> OnCandleClosed;
@@ -38,11 +40,11 @@ namespace StrategyTester.DataProviders
 
         private void InitSymbolInfo()
         {
-            var binanceSymbolInfo = _client.Spot.System.GetExchangeInfoAsync().Result.Data.Symbols
+            var binanceSymbolInfo = _client.FuturesUsdt.System.GetExchangeInfoAsync().Result.Data.Symbols
                 .FirstOrDefault(s => s.Name.Equals(_state.TestingSettings.Symbol));
             if (binanceSymbolInfo is null)
             {
-                Logger.LogError("Symbols info is null. Incorrect symbol.");
+                Logger?.LogError("Symbols info is null. Incorrect symbol.");
                 throw new ArgumentNullException("Symbols info is null. Incorrect symbol.");
             }
             _state.SymbolInfo = new SymbolInfo
@@ -55,13 +57,13 @@ namespace StrategyTester.DataProviders
 
         private void InitHistory()
         {
-            var binanceCandles = _client.Spot.Market.GetKlinesAsync(
+            var binanceCandles = _client.FuturesUsdt.Market.GetKlinesAsync(
                 _state.TestingSettings.Symbol,
                 _state.TestingSettings.CandleInterval.ToBinanceKlineInterval(),
                 limit: _state.TestingSettings.HitoryRange).Result.Data;
             if (binanceCandles is null)
             {
-                Logger.LogError("Incorrect hitory params. History data can't be null");
+                Logger?.LogError("Incorrect hitory params. History data can't be null");
                 throw new NullReferenceException("Incorrect hitory params. History data can't be null");
             }
 
