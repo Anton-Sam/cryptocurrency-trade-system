@@ -18,7 +18,7 @@ namespace StrategyTester
 
         public TestingResult StartTest(IStrategy strategy, TestingSettings settings)
         {
-            var paperDataProvider = new PaperDataProvider();
+            var paperDataProvider = new BinanceSpotPaperDataProvider();
             paperDataProvider.Logger = _logger;
             strategy.DataProvider = paperDataProvider;
 
