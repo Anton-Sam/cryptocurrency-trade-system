@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace StrategyTester.Test
 {
-    class ExchangeState
+    public class ExchangeState
     {
         internal int OrderId { get; set; }
         internal TestingSettings TestingSettings { get; set; }

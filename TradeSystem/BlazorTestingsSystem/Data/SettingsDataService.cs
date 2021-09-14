@@ -29,6 +29,7 @@ namespace BlazorTestingsSystem.Data
             {
                 StrategiesDict = new Dictionary<string, IStrategy>();
                 StrategiesDict.Add("TwoEma", new TwoEmaStrategy());
+                StrategiesDict.Add("MacdEma", new MacdEmaStrategy());
 
                 Intervals = GetEnumDisplayNames<CandleInterval>();
 
