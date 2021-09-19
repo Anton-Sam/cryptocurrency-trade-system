@@ -1,4 +1,5 @@
 ﻿using BlazorTestingsSystem.Enums;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace BlazorTestingsSystem.Data
@@ -13,7 +14,10 @@ namespace BlazorTestingsSystem.Data
 
         [Required]
         public int? HistoryRange { get; set; }
-
+        [Required]
+        public DateTime? StartDate { get; set; }
+        [Required]
+        public DateTime? FinishDate { get; set; }
         [Required]
         public double? StartBalance { get; set; }
 

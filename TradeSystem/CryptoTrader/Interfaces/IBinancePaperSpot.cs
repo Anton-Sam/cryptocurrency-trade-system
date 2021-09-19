@@ -10,6 +10,5 @@ namespace CryptoTrader.Interfaces
     {
         IBinancePaperMarket Market { get; }
         IBinancePaperOrder Order { get; }
-        IBinancePaperAccount Account { get; }
     }
 }

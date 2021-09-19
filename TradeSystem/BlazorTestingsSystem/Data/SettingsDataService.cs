@@ -29,10 +29,11 @@ namespace BlazorTestingsSystem.Data
             {
                 StrategiesDict = new Dictionary<string, IStrategy>();
                 StrategiesDict.Add("TwoEma", new TwoEmaStrategy());
+                StrategiesDict.Add("CrazyStrategy", new CrazeStrategy());
 
                 Intervals = GetEnumDisplayNames<CandleInterval>();
 
-                Symbols = (await client.Spot.System.GetExchangeInfoAsync()).Data.Symbols.Select(s => s.Name);
+                Symbols = (await client.FuturesUsdt.System.GetExchangeInfoAsync()).Data.Symbols.Select(s => s.Name);
             }
             return this;
         }

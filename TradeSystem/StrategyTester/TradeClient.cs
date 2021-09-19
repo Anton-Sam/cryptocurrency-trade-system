@@ -16,7 +16,7 @@ namespace StrategyTester
             _logger?.LogInformation("Trade client created");
         }
 
-        public TestingResult StartTest(IStrategy strategy, TestingSettings settings)
+        public TestingResult StartTestSpot(IStrategy strategy, TestingSettings settings)
         {
             var paperDataProvider = new BinanceSpotPaperDataProvider();
             paperDataProvider.Logger = _logger;
@@ -29,9 +29,24 @@ namespace StrategyTester
             return result;
         }
 
+        public TestingResult StartTestFutures(IStrategy strategy, TestingSettings settings)
+        {
+            var paperDataProvider = new BinanceFuturesUsdtPaperDataProvider();
+            paperDataProvider.Logger = _logger;
+            strategy.DataProvider = paperDataProvider;
+
+            paperDataProvider.OnCandleClosed += strategy.OnCandleClosed;
+            paperDataProvider.OnOrderStatusChanged += strategy.OnOrderStatusChanged;
+
+            var result = paperDataProvider.StartTrading(settings);
+            return result;
+        }
+
+
         public async Task<TestingResult> StartTestAsync(IStrategy strategy, TestingSettings settings)
         {
-            return await Task.Run(() => StartTest(strategy, settings));
+            return await Task.Run(() => StartTestFutures(strategy, settings));
         }
+
     }
 }

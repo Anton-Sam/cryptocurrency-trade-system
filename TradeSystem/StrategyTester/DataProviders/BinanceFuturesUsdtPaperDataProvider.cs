@@ -1,5 +1,6 @@
 ﻿using Binance.Net;
 using Microsoft.Extensions.Logging;
+using StrategyTester.Core;
 using StrategyTester.Enums;
 using StrategyTester.Extensions;
 using StrategyTester.Models;
@@ -42,11 +43,7 @@ namespace StrategyTester.DataProviders
         {
             var binanceSymbolInfo = _client.FuturesUsdt.System.GetExchangeInfoAsync().Result.Data.Symbols
                 .FirstOrDefault(s => s.Name.Equals(_state.TestingSettings.Symbol));
-            if (binanceSymbolInfo is null)
-            {
-                Logger?.LogError("Symbols info is null. Incorrect symbol.");
-                throw new ArgumentNullException("Symbols info is null. Incorrect symbol.");
-            }
+
             _state.SymbolInfo = new SymbolInfo
             {
                 Name = binanceSymbolInfo.Name,
@@ -57,15 +54,18 @@ namespace StrategyTester.DataProviders
 
         private void InitHistory()
         {
-            var binanceCandles = _client.FuturesUsdt.Market.GetKlinesAsync(
+            var binanceCandles = new List<Binance.Net.Interfaces.IBinanceKline>();
+            for (DateTime date = _state.TestingSettings.StartDate; date <= _state.TestingSettings.FinishDate; date=date.AddDays(1))
+            {
+                binanceCandles.AddRange(_client.FuturesUsdt.Market.GetKlinesAsync(
                 _state.TestingSettings.Symbol,
                 _state.TestingSettings.CandleInterval.ToBinanceKlineInterval(),
-                limit: _state.TestingSettings.HitoryRange).Result.Data;
-            if (binanceCandles is null)
-            {
-                Logger?.LogError("Incorrect hitory params. History data can't be null");
-                throw new NullReferenceException("Incorrect hitory params. History data can't be null");
+                startTime: date,endTime:date.AddDays(1).AddSeconds(-1)).Result.Data);
             }
+            //var binanceCandles = _client.FuturesUsdt.Market.GetKlinesAsync(
+            //    _state.TestingSettings.Symbol,
+            //    _state.TestingSettings.CandleInterval.ToBinanceKlineInterval(),
+            //    limit: _state.TestingSettings.HitoryRange).Result.Data;
 
             _state.HistoryCandles = binanceCandles.Select(bin => new Candle
             {
@@ -89,24 +89,53 @@ namespace StrategyTester.DataProviders
 
         internal TestingResult StartTrading(TestingSettings settings)
         {
-            Logger.LogInformation("Testing is started");
+            Logger?.LogInformation("Testing is started");
             InitializeData(settings);
-            var result = new TestingResult();
             foreach (var candle in _state.HistoryCandles)
             {
                 _state.LastCandle = candle;
-                CheckOrders(_state.LastCandle);
-                OnCandleClosed?.Invoke(_state.LastCandle);
-                CheckOrders(_state.LastCandle);
-                result.BalanceChanges.Add(new BalanceChange
-                {
-                    Balance = GetCurrentBalance(),
-                    Date = _state.LastCandle.Date
-                });
-            }
-            result.HistoryData = _state.HistoryCandles;
-            result.OrdersHistory = _state.OrdersHistory;
 
+                CheckOrders(_state.LastCandle);
+
+                OnCandleClosed?.Invoke(_state.LastCandle);
+
+                CheckOrders(_state.LastCandle);
+            }
+
+            var filledOrders = _state.OrdersHistory.Where(o => o.Status == OrderStatus.Filled);
+            var finalBalance = settings.StartBalance;
+            foreach (var order in filledOrders)
+            {
+                var assetQuantity = order.Quantity * order.Price.Value;
+                if (order.Type == OrderType.Market)
+                    finalBalance -= assetQuantity * settings.TakerFee;
+                else
+                    finalBalance -= assetQuantity * settings.MakerFee;
+
+                if (order.Side == OrderSide.Buy)
+                    finalBalance -= assetQuantity;
+                else
+                    finalBalance += assetQuantity;
+            }
+            var result = new TestingResult()
+            {
+                HistoryData = _state.HistoryCandles,
+                OrdersHistory = _state.OrdersHistory,
+                BalanceChanges = new List<BalanceChange>
+                {
+                    new BalanceChange
+                    {
+                        Balance = settings.StartBalance,
+                        Date = _state.HistoryCandles.First().Date
+                    },
+                    new BalanceChange
+                    {
+                        Balance = finalBalance,
+                        Date = _state.HistoryCandles.Last().Date
+                    }
+                }
+            };
+            
             return result;
         }
 
@@ -124,16 +153,7 @@ namespace StrategyTester.DataProviders
                 {
                     var newOrder = (Order)order.Clone();
                     newOrder.Status = OrderStatus.Filled;
-                    if (newOrder.Side == OrderSide.Buy)
-                    {
-                        _state.QuoteAssetBalance.Locked -= newOrder.Quantity * newOrder.Price.Value;
-                        _state.BaseAssetBalance.Free += newOrder.Quantity;
-                    }
-                    else
-                    {
-                        _state.BaseAssetBalance.Locked -= newOrder.Quantity;
-                        _state.QuoteAssetBalance.Free += newOrder.Quantity * newOrder.Price.Value;
-                    }
+
                     _state.OpenOrders.RemoveAll(o => o.Id.Equals(newOrder.Id));
                     _state.OrdersHistory.Add(newOrder);
                     OnOrderStatusChanged?.Invoke(newOrder);
@@ -181,10 +201,10 @@ namespace StrategyTester.DataProviders
                 order.Price = _state.LastCandle.Close;
 
 
-            if (order.Side == OrderSide.Buy)
-                AddCurrencyToOrder(_state.QuoteAssetBalance, order.Quantity * order.Price.Value);
-            else
-                AddCurrencyToOrder(_state.BaseAssetBalance, order.Quantity);
+            //if (order.Side == OrderSide.Buy)
+            //    AddCurrencyToOrder(_state.QuoteAssetBalance, order.Quantity * order.Price.Value);
+            //else
+            //    AddCurrencyToOrder(_state.BaseAssetBalance, order.Quantity);
 
             _state.OrdersHistory.Add(order);
             _state.OpenOrders.Add(order);
@@ -217,14 +237,15 @@ namespace StrategyTester.DataProviders
                 throw new ArgumentException("Either orderId or origClientOrderId must be sent");
             }
 
-            var order = (Order)_state.OpenOrders.FirstOrDefault(ord => ord.Id.Equals(orderId)).Clone();
+            var order = (Order)_state.OpenOrders.FirstOrDefault(ord => ord.Id.Equals(orderId))?.Clone();
             if (order is null)
                 return null;
+            //order = (Order)order.Clone();
 
-            if (order.Side == OrderSide.Buy)
-                ReturnCurrencyFromOrder(_state.QuoteAssetBalance, order.Quantity * order.Price.Value);
-            else
-                ReturnCurrencyFromOrder(_state.BaseAssetBalance, order.Quantity);
+            //if (order.Side == OrderSide.Buy)
+            //    ReturnCurrencyFromOrder(_state.QuoteAssetBalance, order.Quantity * order.Price.Value);
+            //else
+            //    ReturnCurrencyFromOrder(_state.BaseAssetBalance, order.Quantity);
 
             order.Status = OrderStatus.Canceled;
             order.UpdateTime = _state.LastCandle.Date;

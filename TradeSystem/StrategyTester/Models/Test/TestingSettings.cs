@@ -12,6 +12,10 @@ namespace StrategyTester.Models.Test
         public string Symbol { get; set; }
         public CandleInterval CandleInterval { get; set; }
         public int HitoryRange { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime FinishDate { get; set; }
         public decimal StartBalance { get; set; }
+        public decimal MakerFee { get; set; }
+        public decimal TakerFee { get; set; }
     }
 }

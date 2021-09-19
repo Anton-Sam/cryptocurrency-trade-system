@@ -95,6 +95,14 @@
                 <ValidationMessage For="@(() => settingsDetails.HistoryRange)"></ValidationMessage>
             </div>
             <div class="form-row">
+                <SfDatePicker @bind-Value="@settingsDetails.StartDate" Placeholder="History range" TValue="DateTime?" FloatLabelType="FloatLabelType.Auto" Format="yyyy-MM-dd"></SfDatePicker>
+                <ValidationMessage For="@(() => settingsDetails.StartDate)"></ValidationMessage>
+            </div>
+            <div class="form-row">
+                <SfDatePicker @bind-Value="@settingsDetails.FinishDate" Placeholder="History range" TValue="DateTime?" FloatLabelType="FloatLabelType.Auto" Format="yyyy-MM-dd"></SfDatePicker>
+                <ValidationMessage For="@(() => settingsDetails.FinishDate)"></ValidationMessage>
+            </div>
+            <div class="form-row">
                 <SfNumericTextBox @bind-Value="@settingsDetails.StartBalance" Placeholder="Start balance" TValue="double?" FloatLabelType="FloatLabelType.Auto" Min="0"></SfNumericTextBox>
                 <ValidationMessage For="@(() => settingsDetails.StartBalance)"></ValidationMessage>
             </div>
@@ -128,6 +136,8 @@
         var candleInterval = (StrategyTester.Enums.CandleInterval)Enum.Parse(typeof(StrategyTester.Enums.CandleInterval), settingsDetails.CandleInterval.Value.ToString());
         var historyRange = settingsDetails.HistoryRange.Value;
         var startBalance = (decimal)settingsDetails.StartBalance.Value;
+        var startDate = settingsDetails.StartDate.Value;
+        var finishDate = settingsDetails.FinishDate.Value;
 
         var result = await traderClient.StartTestAsync(strategy,
             new TestingSettings
@@ -135,7 +145,9 @@
                 Symbol = symbol,
                 CandleInterval = candleInterval,
                 HitoryRange = historyRange,
-                StartBalance = startBalance
+                StartBalance = startBalance,
+                StartDate=startDate,
+                FinishDate=finishDate
             });
         TradeResultDataService.Symbol = symbol;
         TradeResultDataService.Candles = Mapper.Map<IEnumerable<Candle>>(result.HistoryData);

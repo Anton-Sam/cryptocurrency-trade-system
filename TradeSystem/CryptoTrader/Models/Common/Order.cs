@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoTrader.Models
+namespace CryptoTrader.Models.Common
 {
     class Order
     {
@@ -15,7 +15,7 @@ namespace CryptoTrader.Models
         public OrderStatus Status { get; set; }
         public OrderType Type { get; set; }
         public OrderSide Side { get; set; }
-        public decimal? Price { get; set; }
+        public decimal Price { get; set; }
         public decimal Quantity { get; set; }
         public DateTime CreateTime { get; set; }
         public DateTime UpdateTime { get; set; }

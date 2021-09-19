@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CryptoTrader.Models.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace CryptoTrader.Interfaces
 {
     interface IBinancePaperMarket
     {
-        public void GetLastCandles(int count);
+        public IEnumerable<Candle> GetLastCandles(int count);
     }
 }

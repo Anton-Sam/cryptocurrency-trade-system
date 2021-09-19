@@ -8,7 +8,7 @@ namespace TestLib
         static void Main(string[] args)
         {
             var client = new BinanceClient();
-            client.General.GetAccountInfoAsync().Result.Data.Balances
+            var data=client.FuturesUsdt.Market.GetKlinesAsync("BTCUSDT", Binance.Net.Enums.KlineInterval.OneMinute, limit: 3).Result.Data;
         }
     }
 }

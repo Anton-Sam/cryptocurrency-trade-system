@@ -1,5 +1,5 @@
-﻿using CryptoTrader.Enums;
-using CryptoTrader.Models;
+﻿using StrategyTester.Enums;
+using StrategyTester.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,11 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CryptoTrader.Core
+namespace StrategyTester.Core
 {
     class VirtualExchange
     {
-        internal ObservableCollection<Order> Orders { get; set; }
+        internal List<Order> Orders { get; set; }
+        internal ObservableCollection<Order> OrdersHistory { get; set; }
         internal IEnumerable<Candle> History { get; set; }
         internal IEnumerable<Balance> Balances { get; set; }
         internal IEnumerable<SymbolInfo> SymbolsInfo { get; set; }
@@ -26,12 +27,12 @@ namespace CryptoTrader.Core
 
         internal VirtualExchange()
         {
-            Orders.CollectionChanged += Orders_CollectionChanged;
+            OrdersHistory.CollectionChanged += Orders_CollectionChanged;
         }
 
         private void Orders_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action==NotifyCollectionChangedAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 OnOrderStatusChanged?.Invoke(sender as Order);
                 CheckOrders(_lastCandle);
@@ -65,3 +66,4 @@ namespace CryptoTrader.Core
         protected virtual void RecalculateBalances(Order order) { }
     }
 }
+
