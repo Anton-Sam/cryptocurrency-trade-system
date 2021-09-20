@@ -30,6 +30,7 @@ namespace BlazorTestingsSystem.Data
                 StrategiesDict = new Dictionary<string, IStrategy>();
                 StrategiesDict.Add("TwoEma", new TwoEmaStrategy());
                 StrategiesDict.Add("CrazyStrategy", new CrazeStrategy());
+                StrategiesDict.Add("MFIStrategy", new MFIStrategy());
 
                 Intervals = GetEnumDisplayNames<CandleInterval>();
 

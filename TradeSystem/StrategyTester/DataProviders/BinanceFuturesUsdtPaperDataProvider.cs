@@ -28,6 +28,10 @@ namespace StrategyTester.DataProviders
         private void InitializeData(TestingSettings settings)
         {
             _state = new ExchangeState();
+
+            settings.TakerFee = 0.0004m;
+            settings.MakerFee = 0.0002m;
+
             _client = new BinanceClient();
 
             _state.TestingSettings = settings;
@@ -117,6 +121,7 @@ namespace StrategyTester.DataProviders
                 else
                     finalBalance += assetQuantity;
             }
+
             var result = new TestingResult()
             {
                 HistoryData = _state.HistoryCandles,
