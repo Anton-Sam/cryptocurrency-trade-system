@@ -12,7 +12,7 @@ namespace StrategyTester.Models.Interfaces
     {
         ILogger Logger { get; set; }
         Order PlaceOrder(string clientOrderId, OrderSide side, OrderType orderType, decimal quantity, decimal? price = null);
-        Order CancelOrder(string orderId, string clientOrderId);
+        Order CancelOrder(string orderId=null, string clientOrderId=null);
         IEnumerable<Order> CancelAllOpenOrders();
         IEnumerable<Order> GetOpenOrders();
         Balance GetBaseAssetBalance();

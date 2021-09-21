@@ -50,12 +50,20 @@
     {
         if (TradeResultDataService.Orders is null)
             return;
-        var cancelOrdersCount = TradeResultDataService.Orders.Where(o => o.Status == OrderStatus.Canceled).Count();
-        var buyFilledOrdersCount = TradeResultDataService.Orders.Where(o => o.Status == OrderStatus.Filled && o.Side == OrderSide.Buy).Count();
-        var sellFilledOrdersCount = TradeResultDataService.Orders.Where(o => o.Status == OrderStatus.Filled && o.Side == OrderSide.Sell).Count();
-        chartPoints.Add(new RoundedColumnChartData { Name = "Buy", Count = buyFilledOrdersCount });
-        chartPoints.Add(new RoundedColumnChartData { Name = "Sell", Count = sellFilledOrdersCount });
-        chartPoints.Add(new RoundedColumnChartData { Name = "Cancel", Count = cancelOrdersCount });
+        //var cancelOrdersCount = TradeResultDataService.Orders.Where(o => o.Status == OrderStatus.Canceled).Count();
+        //var buyFilledOrdersCount = TradeResultDataService.Orders.Where(o => o.Status == OrderStatus.Filled && o.Side == OrderSide.Buy).Count();
+        //var sellFilledOrdersCount = TradeResultDataService.Orders.Where(o => o.Status == OrderStatus.Filled && o.Side == OrderSide.Sell).Count();
+        //chartPoints.Add(new RoundedColumnChartData { Name = "Buy", Count = buyFilledOrdersCount });
+        //chartPoints.Add(new RoundedColumnChartData { Name = "Sell", Count = sellFilledOrdersCount });
+        //chartPoints.Add(new RoundedColumnChartData { Name = "Cancel", Count = cancelOrdersCount });
+
+        var entries = TradeResultDataService.Orders.Where(o =>o.Status==OrderStatus.Filled && o.ClientOrderId.Contains("entry")).Count();
+        var sls = TradeResultDataService.Orders.Where(o => o.Status == OrderStatus.Filled && o.ClientOrderId.Contains("sl")).Count();
+        var tps = TradeResultDataService.Orders.Where(o => o.Status == OrderStatus.Filled && o.ClientOrderId.Contains("tp")).Count();
+
+        chartPoints.Add(new RoundedColumnChartData { Name = "Entry", Count = entries });
+        chartPoints.Add(new RoundedColumnChartData { Name = "SL", Count = sls });
+        chartPoints.Add(new RoundedColumnChartData { Name = "TP", Count = tps });
     }
 
     public class RoundedColumnChartData

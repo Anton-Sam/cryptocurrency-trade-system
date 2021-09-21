@@ -158,6 +158,7 @@ namespace StrategyTester.DataProviders
                 {
                     var newOrder = (Order)order.Clone();
                     newOrder.Status = OrderStatus.Filled;
+                    newOrder.UpdateTime = candle.Date;
 
                     _state.OpenOrders.RemoveAll(o => o.Id.Equals(newOrder.Id));
                     _state.OrdersHistory.Add(newOrder);
@@ -242,7 +243,12 @@ namespace StrategyTester.DataProviders
                 throw new ArgumentException("Either orderId or origClientOrderId must be sent");
             }
 
-            var order = (Order)_state.OpenOrders.FirstOrDefault(ord => ord.Id.Equals(orderId))?.Clone();
+            Order order;
+            if (!string.IsNullOrEmpty(orderId))
+                order = (Order)_state.OpenOrders.FirstOrDefault(ord => ord.Id.Equals(orderId))?.Clone();
+            else
+                order= (Order)_state.OpenOrders.FirstOrDefault(ord => ord.ClientOrderId.Equals(clientOrderId))?.Clone();
+
             if (order is null)
                 return null;
             //order = (Order)order.Clone();
