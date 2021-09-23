@@ -32,6 +32,7 @@ namespace BlazorTestingsSystem.Data
                 StrategiesDict.Add("CrazyStrategy", new CrazeStrategy());
                 StrategiesDict.Add("MFIStrategy", new MFIStrategy());
                 StrategiesDict.Add("MacdEmaAtrFractStrategy", new MacdEmaAtrFractstrategy());
+                StrategiesDict.Add("MacdEmaStrategy", new MacdEmaStrategy());
 
                 Intervals = GetEnumDisplayNames<CandleInterval>();
 
