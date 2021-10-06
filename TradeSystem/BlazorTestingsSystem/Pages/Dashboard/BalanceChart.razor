@@ -1,0 +1,40 @@
+﻿<div class="col-xs-12 col-sm-6 col-md-6 chart-container">
+    <div class="chart-padding">
+        <div class="line-chart">
+            <SfChart Title="Account - Balance">
+                <ChartArea><ChartAreaBorder Width="0"></ChartAreaBorder></ChartArea>
+                <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.DateTime" LabelFormat="yyyy-MM-dd hh:mm" MaximumLabels="1.5" IntervalType="IntervalType.Auto" EdgeLabelPlacement="EdgeLabelPlacement.Shift">
+                    <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
+                </ChartPrimaryXAxis>
+                <ChartPrimaryYAxis LabelFormat="n4" RangePadding="ChartRangePadding.None">
+                    <ChartAxisLineStyle Width="0"></ChartAxisLineStyle>
+                    <ChartAxisMajorTickLines Width="0"></ChartAxisMajorTickLines>
+                </ChartPrimaryYAxis>
+                <ChartTooltipSettings Enable="true"></ChartTooltipSettings>
+                <ChartSeriesCollection>
+                    <ChartSeries DataSource="@balances" Name="Amount" XName="Date" Width="2"
+                                 Opacity="1" YName="Amount" Type="ChartSeriesType.Line">
+                    </ChartSeries>
+                </ChartSeriesCollection>
+            </SfChart>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter]
+    private TradeResultDataService TradeResultDataService { get; set; }
+
+    private IEnumerable<Balance> balances;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        UpdateChart();
+    }
+
+    private void UpdateChart()
+    {
+        balances = TradeResultDataService.Balances;
+    }
+}

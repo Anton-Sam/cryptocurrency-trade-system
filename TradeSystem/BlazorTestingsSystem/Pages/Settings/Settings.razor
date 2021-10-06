@@ -1,0 +1,148 @@
+﻿@page "/settings"
+@using StrategyTester
+@using StrategyTester.Models.Test
+@using AutoMapper
+@using BlazorTestingsSystem.Enums
+@using Microsoft.Extensions.Logging;
+@inject IMapper Mapper;
+@inject ILogger<Startup> logger;
+
+<style>
+    #main-page {
+        overflow-x: hidden;
+        background: linear-gradient(-141deg, #EEF5F7 14%, #EEF2FB 100%);
+    }
+
+    .content.container-fluid {
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    @@media (min-width: 1100px) {
+        .rightpane {
+            margin-right: 270px;
+        }
+    }
+
+    @@media (max-width: 1100px) {
+        .rightpane {
+            margin-right: 0px;
+        }
+    }
+
+    @@media (min-width: 768px) {
+        .content .content-wrapper {
+            padding: 0;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .content .content-wrapper {
+            padding: 0 8px 8px 8px;
+            margin-top: 7rem;
+        }
+    }
+
+    .content.container-fluid {
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+</style>
+
+@if (showSpinner)
+{
+    <div class="sb-content-overlay">
+        <div class="sb-loading">
+            <svg class="circular" height="40" width="40">
+                <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="6" stroke-miterlimit="10" />
+            </svg>
+        </div>
+    </div>
+    <style>
+        #main-page {
+            pointer-events: none;
+            cursor: auto;
+        }
+    </style>
+}
+
+<div class="settings-container">
+    <div class="col-xs-12 col-sm-6 col-lg-3 col-md-6 margin-top settings-tb-container pane">
+        <EditForm Model="@settingsDetails" OnValidSubmit="@StartTestAsync">
+            <DataAnnotationsValidator />
+            <div class="form-row">
+                <SfDropDownList Placeholder="Strategy" TValue="string" TItem="string" @bind-Value="@settingsDetails.StrategyName" DataSource="@SettingsDataService.StrategiesDict.Keys" FloatLabelType="FloatLabelType.Auto">
+                    <DropDownListFieldSettings Value="Strategy"></DropDownListFieldSettings>
+                </SfDropDownList>
+                <ValidationMessage For="@(() => settingsDetails.CandleInterval)"></ValidationMessage>
+            </div>
+            <div class="form-row">
+                <SfDropDownList Placeholder="Symbol" TValue="string" TItem="string" @bind-Value="@settingsDetails.Symbol" DataSource="@SettingsDataService.Symbols" FloatLabelType="FloatLabelType.Auto">
+                    <DropDownListFieldSettings Value="Symbol"></DropDownListFieldSettings>
+                </SfDropDownList>
+                <ValidationMessage For="@(() => settingsDetails.CandleInterval)"></ValidationMessage>
+            </div>
+            <div class="form-row">
+                <SfDropDownList Placeholder="Candle interval" TValue="CandleInterval?" TItem="Interval" @bind-Value="@settingsDetails.CandleInterval" DataSource="@SettingsDataService.Intervals" FloatLabelType="FloatLabelType.Auto">
+                    <DropDownListFieldSettings Value="CandleInterval"></DropDownListFieldSettings>
+                </SfDropDownList>
+                <ValidationMessage For="@(() => settingsDetails.CandleInterval)"></ValidationMessage>
+            </div>
+            <div class="form-row">
+                <SfNumericTextBox @bind-Value="@settingsDetails.HistoryRange" Placeholder="History range" TValue="int?" FloatLabelType="FloatLabelType.Auto" Min="0" Max="1000"></SfNumericTextBox>
+                <ValidationMessage For="@(() => settingsDetails.HistoryRange)"></ValidationMessage>
+            </div>
+            <div class="form-row">
+                <SfNumericTextBox @bind-Value="@settingsDetails.StartBalance" Placeholder="Start balance" TValue="double?" FloatLabelType="FloatLabelType.Auto" Min="0"></SfNumericTextBox>
+                <ValidationMessage For="@(() => settingsDetails.StartBalance)"></ValidationMessage>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary bt-container">Start</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code
+{
+    [CascadingParameter]
+    SettingsDataService SettingsDataService { get; set; }
+    [CascadingParameter]
+    TradeResultDataService TradeResultDataService { get; set; }
+
+    private bool showSpinner;
+
+    SettingsDetails settingsDetails = new SettingsDetails();
+
+    public async void StartTestAsync()
+    {
+        showSpinner = true;
+
+        var traderClient = new TradeClient(logger);
+
+        var strategy = SettingsDataService.StrategiesDict[settingsDetails.StrategyName];
+        var symbol = settingsDetails.Symbol;
+        var candleInterval = (StrategyTester.Enums.CandleInterval)Enum.Parse(typeof(StrategyTester.Enums.CandleInterval), settingsDetails.CandleInterval.Value.ToString());
+        var historyRange = settingsDetails.HistoryRange.Value;
+        var startBalance = (decimal)settingsDetails.StartBalance.Value;
+
+        var result = await traderClient.StartTestAsync(strategy,
+            new TestingSettings
+            {
+                Symbol = symbol,
+                CandleInterval = candleInterval,
+                HitoryRange = historyRange,
+                StartBalance = startBalance
+            });
+        TradeResultDataService.Symbol = symbol;
+        TradeResultDataService.Candles = Mapper.Map<IEnumerable<Candle>>(result.HistoryData);
+        TradeResultDataService.Balances = Mapper.Map<IEnumerable<Balance>>(result.BalanceChanges);
+        TradeResultDataService.Orders = Mapper.Map<IEnumerable<Order>>(result.OrdersHistory);
+        showSpinner = false;
+        StateHasChanged();
+    }
+}
+

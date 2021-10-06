@@ -1,0 +1,97 @@
+﻿@page "/settings"
+
+@implements IDisposable;
+
+@if (ShowSpinner)
+{
+    <div class="sb-content-overlay">
+        <div class="sb-loading">
+            <svg class="circular" height="40" width="40">
+                <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="6" stroke-miterlimit="10" />
+            </svg>
+        </div>
+    </div>
+    <style>
+        #main-page {
+            pointer-events: none;
+            cursor: auto;
+        }
+    </style>
+}
+
+<style>
+    #main-page {
+        overflow-x: hidden;
+        background: linear-gradient(-141deg, #EEF5F7 14%, #EEF2FB 100%);
+    }
+
+    .content.container-fluid {
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    @@media (min-width: 1100px) {
+        .rightpane {
+            margin-right: 270px;
+        }
+    }
+
+    @@media (max-width: 1100px) {
+        .rightpane {
+            margin-right: 0px;
+        }
+    }
+
+    @@media (min-width: 768px) {
+        .content .content-wrapper {
+            padding: 0;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .content .content-wrapper {
+            padding: 0 8px 8px 8px;
+            margin-top: 7rem;
+        }
+    }
+
+    .content.container-fluid {
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+</style>
+
+<div class="expense-page content">
+    <div class='exp-content-container'>
+        
+        <div class="settings-container">
+            <div class="col-xs-12 col-sm-6 col-lg-3 col-md-6 margin-top settings-tb-container pane">
+                <div>
+                    <p class="chart-title chart-subtitle">Test settings</p>
+                </div>
+                <div class="cb-container">
+                    <StrategiesDropDownList />
+                </div>
+                <div class="cb-container">
+                    <SymbolsDropDownList/>
+                </div>
+                <div class="cb-container">
+                    <IntervalDropDownList/>
+                </div>
+                <div class="tb-container">
+                    <SfTextBox Placeholder="History range" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                </div>
+                <div class="tb-container">
+                    <SfTextBox Placeholder="Start balance" FloatLabelType="@FloatLabelType.Auto"></SfTextBox>
+                </div>
+                <div>
+                    <SfButton CssClass="bt-container" IsPrimary="true">Start</SfButton>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

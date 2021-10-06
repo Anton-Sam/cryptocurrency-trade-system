@@ -1,0 +1,76 @@
+﻿<nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <span id="menu-toggle" href="#" class="navbar-toggle e-icon" @onclick="OpenSidebar"></span>
+            <div class="navbar-brand samplenameheader"></div>
+        </div>
+    </div>
+</nav>
+
+<div id="navigation-sidebar">
+    <SfSidebar @ref="Sidebar" Width="200px" MediaQuery="(min-width: 769px)" Created="@(() => OnSidebarCreate?.Invoke())">
+        <ChildContent>
+            <div id="sidebar-wrapper">
+                <div class="page-list align-center nav-list">
+                    <div class='nav-item'>
+                        <NavLink class="overview" href="" Match="NavLinkMatch.All" @onclick="CloseSidebar">
+                            <span aria-hidden="true" title="Dashboard">Dashboard</span>
+                        </NavLink>
+                    </div>
+                    <div class='nav-item'>
+                        <NavLink class="expense" href="settings" @onclick="CloseSidebar">
+                            <span aria-hidden="true" title="Settings">Settings</span>
+                        </NavLink>
+                    </div>
+                    <div class='nav-item'>
+                        <NavLink class="about" href="about" @onclick="CloseSidebar">
+                            <span aria-hidden="true" title="About">About</span>
+                        </NavLink>
+                    </div>
+                </div>
+                <div class="github-logo">
+                    <a href="https://github.com/Anton-Sam/trade-system" target="_blank">
+                        <img src="mark.svg" /><span>Source Code</span>
+                    </a>
+                </div>
+            </div>
+        </ChildContent>
+    </SfSidebar>
+</div>
+
+<div id="overlay" class="@OverlayClass" @onclick="CloseSidebar"></div>
+
+@code {
+    [CascadingParameter]
+    private TradingDataService ExpenseDataService { get; set; }
+    [Inject]
+    public SettingsDataService SettingsDataService { get; set; }
+    [Parameter]
+    public System.Action OnSidebarCreate { get; set; }
+    private SfSidebar Sidebar;
+    public string OverlayClass = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        //ExpenseDataService.OnChange += StateHasChanged;
+    }
+    private async Task OpenSidebar()
+    {
+        if (!Sidebar.IsOpen)
+        {
+            await this.Sidebar.Show();
+            this.OverlayClass = "overlay";
+        }
+    }
+    private async Task CloseSidebar()
+    {
+
+        SettingsDataService.HistoryRange += 100;
+        if (Sidebar.IsOpen)
+        {
+            await this.Sidebar.Hide();
+            this.OverlayClass = "";
+        }
+    }
+}
