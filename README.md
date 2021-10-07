@@ -2,7 +2,7 @@
 ## Description
 StrategyTester is an easy-to-use library that allows you to create trading strategies and backtest them using Binance Historical Data.
 ## How to use it
-To create a trading strategy you need implement interface IStrategy.
+To create a trading strategy you need to implement interface IStrategy.
 ````C#
 public class TestStrategy : IStrategy
     {
@@ -19,7 +19,7 @@ public class TestStrategy : IStrategy
         }
     }
 ````
-IDataProvider provides you an oppotrunity to work with orders, balances and market data.
+IDataProvider provides you an opportunity to work with orders, balances and market data.
 To start backtesting use TradeClient.
 ````C#
 TradeClient client = new TradeClient();
@@ -38,6 +38,6 @@ var testResult=client.StartTest(strategy,settings);
 * Binance API
 * Blazor
 
-**Diploma project for IT-Academy course (md-nd1-54-21)**
+**Thesis project from IT-Academy course (md-nd1-54-21)**
 
 
