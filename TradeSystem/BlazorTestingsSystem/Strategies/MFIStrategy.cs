@@ -89,13 +89,13 @@ namespace BlazorTestingsSystem.Strategies
             {
                 if (order.ClientOrderId.Equals("entry_long"))
                 {
-                    DataProvider.PlaceOrder("long_tp", OrderSide.Sell, OrderType.Limit, quantity, 1.008m * order.Price);
-                    DataProvider.PlaceOrder("long_sl", OrderSide.Sell, OrderType.Limit, quantity, 0.996m * order.Price);
+                    DataProvider.PlaceOrder("long_tp", OrderSide.Sell, OrderType.Limit, quantity, 1.01m * order.Price);
+                    DataProvider.PlaceOrder("long_sl", OrderSide.Sell, OrderType.Limit, quantity, 0.99m * order.Price);
                 }
                 else if (order.ClientOrderId.Equals("entry_short"))
                 {
-                    DataProvider.PlaceOrder("short_tp", OrderSide.Buy, OrderType.Limit, quantity, 0.992m * order.Price);
-                    DataProvider.PlaceOrder("short_sl", OrderSide.Buy, OrderType.Limit, quantity, 1.006m * order.Price);
+                    DataProvider.PlaceOrder("short_tp", OrderSide.Buy, OrderType.Limit, quantity, 0.99m * order.Price);
+                    DataProvider.PlaceOrder("short_sl", OrderSide.Buy, OrderType.Limit, quantity, 1.01m * order.Price);
                 }
                 else
                     DataProvider.CancelAllOpenOrders();

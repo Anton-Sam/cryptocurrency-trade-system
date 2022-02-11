@@ -25,23 +25,31 @@ namespace BlazorTestingsSystem.Strategies
                 return;
 
             var ema200 = lastCandles.GetEma(200).Last();
-            var hullMa = lastCandles.GetHma(16).TakeLast(2);
+            var hullMaList = lastCandles.GetHma(16).TakeLast(3).Select(a => a.Hma).ToList();
             quantity = balance / candle.Close;
 
-            if (candle.Close > ema200.Ema && hullMa.Last().Hma > hullMa.First().Hma)
+            if (candle.Close > ema200.Ema && hullMaList[1] == hullMaList.Min())
             {
                 DataProvider.PlaceOrder("entry_long", OrderSide.Buy, OrderType.Market, quantity);
             }
-            else if (candle.Close < ema200.Ema && hullMa.Last().Hma < hullMa.Last().Hma)
+            else if (candle.Close < ema200.Ema && hullMaList[1] == hullMaList.Max())
             {
                 DataProvider.PlaceOrder("entry_short", OrderSide.Sell, OrderType.Market, quantity);
             }
+            //if (candle.Close > ema200.Ema && hullMa.Last().Hma > hullMa.First().Hma)
+            //{
+            //    DataProvider.PlaceOrder("entry_long", OrderSide.Buy, OrderType.Market, quantity);
+            //}
+            //else if (candle.Close < ema200.Ema && hullMa.Last().Hma < hullMa.First().Hma)
+            //{
+            //    DataProvider.PlaceOrder("entry_short", OrderSide.Sell, OrderType.Market, quantity);
+            //}
 
         }
 
         public void OnOrderStatusChanged(Order order)
         {
-  
+
             if (order.Status == OrderStatus.Filled)
             {
                 if (order.ClientOrderId.Equals("entry_long"))

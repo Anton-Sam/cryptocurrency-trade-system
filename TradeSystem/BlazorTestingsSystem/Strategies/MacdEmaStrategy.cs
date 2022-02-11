@@ -16,7 +16,8 @@ namespace BlazorTestingsSystem.Strategies
         private IEnumerable<Candle> lastCandles;
         private decimal entryPrice;
         private decimal quantity;
-        private decimal balance = 1000;
+        private decimal initBalance = 100;
+        private decimal balance = 100;
         public void OnCandleClosed(Candle candle)
         {
             if (DataProvider.GetOpenOrders().Any())
@@ -29,11 +30,11 @@ namespace BlazorTestingsSystem.Strategies
             var macds = lastCandles.GetMacd().TakeLast(2);
             quantity = balance / candle.Close;
 
-            if (candle.Close > ema200.Ema && macds.First().Macd < macds.Last().Macd && macds.Last().Macd<-20)
+            if (candle.Close > ema200.Ema && macds.First().Macd < macds.Last().Macd && macds.Last().Macd < -20)
             {
                 DataProvider.PlaceOrder("entry_long", OrderSide.Buy, OrderType.Market, quantity);
             }
-            else if (candle.Close < ema200.Ema && macds.First().Macd > macds.Last().Macd && macds.Last().Macd>20)
+            else if (candle.Close < ema200.Ema && macds.First().Macd > macds.Last().Macd && macds.Last().Macd > 20)
             {
                 DataProvider.PlaceOrder("entry_short", OrderSide.Sell, OrderType.Market, quantity);
             }
@@ -89,16 +90,26 @@ namespace BlazorTestingsSystem.Strategies
             {
                 if (order.ClientOrderId.Equals("entry_long"))
                 {
-                    DataProvider.PlaceOrder("long_tp", OrderSide.Sell, OrderType.Limit, quantity, 1.005m * order.Price);
-                    DataProvider.PlaceOrder("long_sl", OrderSide.Sell, OrderType.Limit, quantity, 0.995m * order.Price);
+                    DataProvider.PlaceOrder("long_tp", OrderSide.Sell, OrderType.Limit, quantity, 1.01m * order.Price);
+                    DataProvider.PlaceOrder("long_sl", OrderSide.Sell, OrderType.Limit, quantity, 0.99m * order.Price);
                 }
                 else if (order.ClientOrderId.Equals("entry_short"))
                 {
-                    DataProvider.PlaceOrder("short_tp", OrderSide.Buy, OrderType.Limit, quantity, 0.995m * order.Price);
-                    DataProvider.PlaceOrder("short_sl", OrderSide.Buy, OrderType.Limit, quantity, 1.005m * order.Price);
+                    DataProvider.PlaceOrder("short_tp", OrderSide.Buy, OrderType.Limit, quantity, 0.99m * order.Price);
+                    DataProvider.PlaceOrder("short_sl", OrderSide.Buy, OrderType.Limit, quantity, 1.01m * order.Price);
                 }
-                else
+                else if (order.ClientOrderId.Contains("tp"))
+                {
+                    balance = initBalance;
                     DataProvider.CancelAllOpenOrders();
+                }
+                else if (order.ClientOrderId.Contains("sl"))
+                {
+                    balance *= 2;
+                    DataProvider.CancelAllOpenOrders();
+                }
+
+
             }
         }
     }
