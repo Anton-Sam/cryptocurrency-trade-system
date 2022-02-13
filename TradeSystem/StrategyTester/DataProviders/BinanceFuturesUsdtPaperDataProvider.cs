@@ -30,7 +30,7 @@ namespace StrategyTester.DataProviders
             _state = new ExchangeState();
 
             settings.TakerFee = 0.0004m;
-            settings.MakerFee = 0.0002m;
+            settings.MakerFee = 0.0004m;
 
             _client = new BinanceClient();
 
