@@ -19,14 +19,15 @@ namespace BlazorTestingsSystem.Strategies
         private decimal quantity;
         private decimal initBalance = 100;
         private decimal balance = 10000;
-        private decimal ema20Angle = 0.001m;
-        private decimal ema80Angle = 0.0004m;
+        private decimal ema20Angle = 0.0006m;
+        private decimal ema80Angle = 0.0008m;
         private decimal percentRetr = 0.45m;
         private decimal acc = 0.0003m;
         private decimal risk = 1.5m;
         private Candle entryCandle;
         private int candleCounter = 0;
-        private int maxCounter = 5;
+        private int maxCounter = 7;
+        private decimal maxCandleSize = 0.1m;
         public void OnCandleClosed(Candle candle)
         {
             var orders = DataProvider.GetOpenOrders();
@@ -58,7 +59,7 @@ namespace BlazorTestingsSystem.Strategies
             if (ema20.Last() > ema80.Last() &&
                 angle20 >= 1 + ema20Angle &&
                 angle80 >= 1 + ema80Angle &&
-                candle.IsBearishRetracement(percentRetr))
+                candle.IsBearishRetracement(percentRetr, maxCandleSize))
             {
                 DataProvider.PlaceOrder("entry_long", OrderSide.Buy, OrderType.Limit, quantity, candle.High * (1 + acc));
                 entryCandle = candle;
@@ -67,7 +68,7 @@ namespace BlazorTestingsSystem.Strategies
             else if (ema20.Last() < ema80.Last() &&
                 angle20 <= 1 - ema20Angle &&
                 angle80 <= 1 - ema80Angle &&
-                candle.IsBullishhRetracement(percentRetr))
+                candle.IsBullishhRetracement(percentRetr, maxCandleSize))
             {
                 DataProvider.PlaceOrder("entry_short", OrderSide.Sell, OrderType.Limit, quantity, candle.Low * (1 - acc));
                 entryCandle = candle;
@@ -111,19 +112,21 @@ namespace BlazorTestingsSystem.Strategies
     }
     public static class CandleExtensions
     {
-        public static bool IsBearishRetracement(this Candle candle, decimal percent)
+        public static bool IsBearishRetracement(this Candle candle, decimal percent, decimal maxSize)
         {
             var candleSize = candle.High - candle.Low;
             var topShadow = candle.High - Math.Max(candle.Close, candle.Open);
+            var size = candle.High / candle.Low - 1;
 
-            return topShadow / candleSize > percent;
+            return topShadow / candleSize > percent && maxSize > size;
         }
-        public static bool IsBullishhRetracement(this Candle candle, decimal percent)
+        public static bool IsBullishhRetracement(this Candle candle, decimal percent, decimal maxSize)
         {
             var candleSize = candle.High - candle.Low;
             var botShadow = Math.Min(candle.Close, candle.Open) - candle.Low;
+            var size = candle.High / candle.Low - 1;
 
-            return botShadow / candleSize > percent;
+            return botShadow / candleSize > percent && maxSize > size;
         }
     }
 }
