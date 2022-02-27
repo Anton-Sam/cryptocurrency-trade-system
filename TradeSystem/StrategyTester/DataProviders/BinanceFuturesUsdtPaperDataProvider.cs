@@ -154,7 +154,7 @@ namespace StrategyTester.DataProviders
             var openOrders = new List<Order>(_state.OpenOrders);
             foreach (var order in openOrders)
             {
-                if (order.Price <= Math.Max(candle.Close, candle.Open) && order.Price >= Math.Min(candle.Close, candle.Open))
+                if (order.Price <= candle.High && order.Price >= candle.Low)
                 {
                     var newOrder = (Order)order.Clone();
                     newOrder.Status = OrderStatus.Filled;

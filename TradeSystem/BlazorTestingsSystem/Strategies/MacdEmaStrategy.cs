@@ -18,6 +18,8 @@ namespace BlazorTestingsSystem.Strategies
         private decimal quantity;
         private decimal initBalance = 100;
         private decimal balance = 100;
+        private decimal tp = 0.01m;
+        private decimal sl = 0.01m;
         public void OnCandleClosed(Candle candle)
         {
             if (DataProvider.GetOpenOrders().Any())
@@ -90,22 +92,22 @@ namespace BlazorTestingsSystem.Strategies
             {
                 if (order.ClientOrderId.Equals("entry_long"))
                 {
-                    DataProvider.PlaceOrder("long_tp", OrderSide.Sell, OrderType.Limit, quantity, 1.02m * order.Price);
-                    DataProvider.PlaceOrder("long_sl", OrderSide.Sell, OrderType.Limit, quantity, 0.98m * order.Price);
+                    DataProvider.PlaceOrder("long_tp", OrderSide.Sell, OrderType.Limit, quantity, (1 + tp) * order.Price);
+                    DataProvider.PlaceOrder("long_sl", OrderSide.Sell, OrderType.Limit, quantity, (1 - sl) * order.Price);
                 }
                 else if (order.ClientOrderId.Equals("entry_short"))
                 {
-                    DataProvider.PlaceOrder("short_tp", OrderSide.Buy, OrderType.Limit, quantity, 0.98m * order.Price);
-                    DataProvider.PlaceOrder("short_sl", OrderSide.Buy, OrderType.Limit, quantity, 1.02m * order.Price);
+                    DataProvider.PlaceOrder("short_tp", OrderSide.Buy, OrderType.Limit, quantity, (1 - tp) * order.Price);
+                    DataProvider.PlaceOrder("short_sl", OrderSide.Buy, OrderType.Limit, quantity, (1 + sl) * order.Price);
                 }
                 else if (order.ClientOrderId.Contains("tp"))
                 {
-                    balance = initBalance;
+                    //balance = initBalance;
                     DataProvider.CancelAllOpenOrders();
                 }
                 else if (order.ClientOrderId.Contains("sl"))
                 {
-                    balance *= 2;
+                    //balance *= 2;
                     DataProvider.CancelAllOpenOrders();
                 }
 
